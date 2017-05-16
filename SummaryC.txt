@@ -464,16 +464,19 @@ int main(void){
 int x = 1; 
 
 - hier wird eine Variable mit dem NAMEN x, dem DATENTYP int und dem WERT 1 definiert
+- man kann auch sagen: die Variable x wird mit 1 initialisiert 
 |Ort der Definition:
  in ANSI C (Standard vor C99) muss eine Definition am Anfang eines Code-Blocks stattfinden.
  ein Beispiel dafür ist der Anfang der main-Funktion.
  in C99 kann eine Variable auch in einer beliebigen Zeile eines Code-Blocks definiert werden.|
 
+- eine neue Variable wird deklariert:
+ 
 int x;
 
 - hier wird eine Variable mit dem NAMEN x, dem DATENTYP x (und einem zufälligen WERT) deklariert 
 - jetzt wird für die Variable x mit dem Datentyp int ein Speicherplatz reserviert 
-+ der WERT der Variable muss unbedingt noch definiert werden 
++ die Variable muss unbedingt noch mit einem WERT initialisiert werden!
 - Deklaration einer Variable umfasst Datentyp und Namen der Variable und macht dem Compiler somit bekannt mit welchem Typ ein bestimmter Variablenname verbunden werden muss
 - Beispiele:
 
@@ -2686,5 +2689,146 @@ Nach goto!
 
 
 1.19 Funktionen
+
+- Funktionen haben die Aufgabe, Teile eines Programms unter einem eigenen Namen zusammenzufassen 
++ damit kann man dann diesen Programmteil mit einem Namen aufrufen 
++ beim Aufruf kann man Parameter mitgeben
++ Funktionen können auch Ergebnisse zurückliefern 
+
+- Funktionen sind ein Mittel zur Strukturierung eines Programms 
++ bei einem großen Programm kann man nicht alle Anweisungen in einem Block (main) zusammenfassen, da sont der Überblick verloren geht
++ ein Programm sollte mit Hilfe von Funtkionen in modulare Teile aufgetielt werden 
+
+- Funktionen sind ein Mittel zur Wiederverwendung 
++ eine Funktion kann an mehereren Stellen (mit unterschiedlichen Parametern) aufgerufen werden
++ die Funktion selbst ist nur einmal im Programm vorhanden und verkürzt daher den Programmtext 
+
+- Prozedurale Programmierung 
++ Zerlegung eines Algorithmus in überschaubare Teile, die anhand einer definierten Schnittstelle aufrufbar sind 
++ Unterstützung durch das Programmierkonzept der Funktion
++ Erweiterung des imperativen Paradigmas (eine Folge von Befehlen wird ausgeführt) 
+-> Folge von definierten Zustandsübergängen, bei denen festgelegt ist, wie Zustände verändert werden sollen 
+-> Unterstützung durch Kontrollstrukturen, Variablen und Zuweisungsoperator 
++ bei der prozeduralen Programmierung besteht kein Zusammenhalt zwischen Datne und Funktionen 
+-> in der objektorientierten Programmierung (nächster Schritt der Abstraktion) werden Daten und Funktionen in Objekten zusammengefasst (Java)
+
+- Definition von Funktionen
++ die Definition einer Funktion besteht aus
+-> Funktionskopf 
+-> Funktionsrumpf
++ die Aufgabe einer Funktion ist es, aus Eingabedaten Ausgabedaten zu erzeugen
+-> Eingabedaten:
+   - per Parameter übergebene Werte
+   - globale Variablen (außerhalb von Funktionen vereinbart - sollten nur in Ausnahmefällen verwendet werden)
+-> Ausgabedaten:
+   - Rückgabewert der Funktion
+   - Änderungen an Variablen (Pointer), deren Adresse an die Funktion über die Parameterliste übergeben wird 
+   - Änderungen an globalen Variablen (nur in Ausnahmenfällen)
+
+- Syntax einer Funktion:
+
+Spezifizierer Rückgabetyp Funktionsname (typ_1 formaler_parameter_1, ... typ_n formaler_parameter_n) //Funktionskopf
+{
+	...
+	Funktionsrumpf
+	...
+}
+
++ der Funktionskopf beschreibt, wie eine Funktion aufgerufen werden kann (also die Aufrufschnittstelle) 
++ der Funktionsrumpf enthält die Anweisungen der Funktion
++ der Funktionsname muss eindeutig sein
++ der Spezifizierer (speicherklasse) ist optional
++ die Parameter sind auch optional - Funktion ohne Parameter wird auch Prozedur gennant
+
+- Parameter 
+
++ die Parameterzahl wird vom Programmierer festgelet 
++ hat eine Funktion keine Parameter wird (void) geschrieben statt (argument_1, argument_2,...,argument_n)
++ Variadische Funktionen haben eine variable Anzahl von Paramtern
+-> solche Parameterlisten werden mit einer Ellipse (drei Punkte am Ende der Parameterliste) konstruiert 
+-> ein Beispiel ist printf()
+
+- Funktionsaufruf 
+
++ eine Funktion wird einmal definiert und kann dann mehrmals aufgerufen werden
++ Funktionsaufruf, wenn keine Parameter an die Funktion übergeben werden:
+
+function();
+
++ Funktionsaufruf, wenn Argumente an die Funktion übergeben werden: 
+-> Parameter = argument (english)
+-> dort wo die Funktion aufgerufen wird, nennen wir die Werte in den Klammern: Argumente 
+   - Argumente werden auch Aktuelle Parameter genannt
+   - das sind die Werte die aktuell der Funktion übergeben werden und in der Funktion bearbeitet werden
+-> dort wo die Funktion definiert wird, nennnen wir die Werte in den Klammern: Parameter 
+   - Parameter werden auch Formale Parameter genannt
+   - Formale Parameter sind "Platzhalter" für die Werte, die ihnen durch die Argumente (aktuellen Parameter) übergeben werden 
+   - Formale Parameter werden dann für die Befehle in der Funktion verwendet mit den Werten der aktuellen Paramter
+   - beim Aufruf einer Funktion mit aktuellen Parametern finden also Zuweisungen statt
+     + ein formaler Parameter wird als lokale Variable (nur in der Funktion verwendbar) angelegt und mit dem Wert
+	   des entsprechenden akutellen Parameters initialisiert (dies wird auch als call-by-value bezeichnet)
+	 + der akutelle Parameter kann auch ein beliebiger Ausdruck sein
+	 + implizite Typkonvertierung
+	   -> der Typ des aktuellen Parameters kann sich vom Typ des formalen Parameters unterscheiden 
+	   -> beim Aufruf der Funktion wird dann die implizite Typkonvertierung durchgeführt
+	      - ist der aktuelle Parameter z.B. vom Typ double und hat den Wert 10.5
+		  - der formale Paramter hat aber den Typ int 
+		  - dann wird double "runter-gecasted" auf int
+          - die im Funktionskopf versteckte Zuweisung sieht nämlich so aus: int formaler_Parameter = 10.5; => 10.5 wird zu 10 (wegen der impliziten Typkonvertierung)			
+	   -> Achtung: bei variadischen Argumenten wird float immer automatisch in double umgewandelt
+
+function(argument_1, argument_2,...,argument_n); 
+
+- Beispiel (ohne Parameter, ohne Rückgabewert):
+
+// hat eine Funktion keine Parameter wird (void) geschrieben statt (argument_1, argument_2,...,argument_n)
+// hat eine Funktion keinen Rückgabewert dann wird void geschrieben statt des Datentyps des Rückgabewertes 
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void hello(void) 
+{
+	printf("In der Funktion\n");
+}
+	
+int main(void) 
+{
+	printf("Vor der Funktion\n");
+	hello();
+	hello();
+	printf("Nach der Funktion\n");
+	return EXIT_SUCCESS;
+}
+(Ausgabe)
+Vor der Funktion
+In der Funktion
+In der Funktion
+Nach der Funktion
+
+- Beispiel (2 int-Parameter)
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void multi(int ival1, int ival2) // ival für "integer value"
+{
+	printf("%d * %d = %d\n", ival1, ival2, ival1 * ival2);
+}
+
+int main(void) 
+{
+	int val1 = 10, val2 = 20;
+	multi(10, 20);
+	multi(val1, val2);
+	multi(val1 + 10, val2 * 20); // bis hierhin wurden 3 verschiedene Ausdrücke (Argumente) an die Parameter ival1 und ival2 übergeben - einmal (10, 20) dann (val1, val2) und (val1 + 10, val2 * 20)
+	multi(val1, val2);
+	return EXIT_SUCCESS;
+}
+(Ausgabe)
+10 * 20 = 200
+10 * 20 = 200
+20 * 400 = 8000
+10 * 20 = 200
 
 
