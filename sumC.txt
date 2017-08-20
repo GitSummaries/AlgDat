@@ -1,0 +1,3221 @@
+﻿1. Basics
+
+1.1 Kommentare
+
+- für Kommentare ohne Absatz (eine Zeile) (nur in C99):
+
+// ...
+
+- für Kommentare mit Absatz (mehrere Zeilen):
+
+/*
+...
+*/
+
+1.2-1 Quelltextdatei
+
+- ist ein file das unseren Quelltext/Source-Code enthält (.c Datei)
+
+1.2 Header Dateien
+
+- Header Dateien sind andere Bibliotheken/Module die durch #include Statements in die Quelltextdatei integriert werden 
++ beinhalten Informationen für die Übersetzung/Compilierung 
++ beinhalten Funktionen 
++ werden mit dem Compiler ausgeliefert und liegen im Systemverzeichnis (-> Include-Verzeichnis)
++ .c File/Datei liegt in einem Arbeitsverzeichnis (Dekstop oder Home etc.)
++ generell wenn man "Hash" also # Symbole vor Statements findet handelt es sich um Präprozessordirektiven
+-> sind Programmanweisungen für den Präprozessor (erster Schritt im Compilierprozess)
+-> Inhalt der Header Datei wird vom Präprozessor an der Stelle der #include-Direktive / des #include-Statements eingesetzt
+
+- stdio.h ("Standard Input - Output")
+
+#include <stdio.h> 
+
++ beinhaltet z.B. Informationen über den Befehl printf
+
+- stdlib.h ("Standard Library")
+
+#include <stdlib.h>
+
+- beinhaltet Informationen zu EXIT_SUCCESS 
++ EXIT_SUCCESS steht für eine 0 (definiert in der Headerdatei <stdlib.h>) bzw. EXIT_SUCCESS ist ein Makro auf 0 
+
+1.3 Main-Funktion
+
+int main(void){
+}
+
+- ist der Einstiegspunkt für das Betriebssystem bei der Abarbeitung
+- main() ist eine Funktion die in jedem C-Programm enthalten sein muss
+- ist auch der Einstiegspunkt für jedes C-Programm
+- in diesem Fall werden keine Daten übergeben, daher '(void)' oder ()
++ Übergabewerte/Parameter stehen normalerweise hier (...) drinnen
+-> kennt man von mathematische Funktionen:
+-> die Variablen, von der die Funktion f(a,b) = a+b abhängig ist, sind a und b 
+-> genauso ist (als Bsp.) eine "add"-Funktion von Variablen abhängig: 'int add(int a, int b)' - für die Addition zweier Ganzzahlen a und b
+- hier ist 'int' der Datentyp von der Variable die von der Funktion zurückgegeben wird / die returned wird
+- die Anweisungen stehen zwischen { und }
+- es gibt von der Main-Funktion noch eine andere Variante wo ich Parameter von der Konsole mitübergebe 
+
+1.4 printf
+
+printf("Hello World!\n");
+
+- die Funktion printf wird aufgerufen und die Zeichenkette 'Hello World!' (alles zwischen " ") übergeben (z.B. auf der Konsole ausgegeben)
++ mit '\n' ("Backslash n" - mit n für "new line") wird ein Zeilenumbruch erzwungen
+- dieser Aufruf wird mit einem Semikolon ( ; ) abgeschlossen 
+
+- printf gehört nicht zur Sprache C selbst, sondern ist eine Funktion der C Standard lib 
+- allgemeine Form von printf:
+
+printf(Formatstring, Parameterliste);
+
++ Parameterliste
+-> die Parameterliste hängt vom Formatstring ab und fällt ggf. ganz weg (wenn keine Variablen ausgegeben werden sollen bzw. keine Platzhalter im Formatstring verwendet werden) 
+-> kann Konstanten (z.B. A), Variablen (z.B. b) oder Ausdrücke (z.B. 2*b) enthalten
+
++ Formatstring
+-> besteht aus gewöhnlichem "Text", in dem man Platzhalter zur Ausgabe von Variableninhalten einfügen kann (z.B. %d)
+-> die Platzhalter beginnen immer mit % und enhalten Angaben über das Ausgabeformat
+
+- Platzhalter:
+
++ wichtige:
+
+%d / %i => Variable des Datentyps: int/short/short int/long/long int/long long int wird als Ganzzahl (mit Vorzeichen) ausgegeben
+%f => Variable des Datentyps: double/float wird als Gleitkommazahl ausgegeben
+%g / %G => Variable des Datentyps: double/float wird entweder als Gleitkommazahl oder in Hexadezimalschreibweise ausgegeben - je nachdem was grad besser passt - sinnvoll!  (kleines e / großes E in der Ausgabe)
+%c => Variable des Datentyps: char wird als ein einzelnes Zeichen ausgegeben
+%s => Variable des Datentyps: string wird als Zeichenkette ausgegeben
+
++ weitere:
+
+%h => Variable des Datentyps: short wird als Ganzzahl ausgegeben 
+%u => Variable des Datentyps: unsigned int wird als positive Ganzzahl ausgegeben
+%o => Variable des Datentyps: unsigned int wird als positive Oktalzahl ausgegeben
+%x / %X => Variable des Datentyps: unsigned int wird als positive Hexadezimalzahl ausgegeben (Buchstaben der Hexadezimalzahl in Klein- / Großschreibung)
+%e / %E => Variable des Datentyps: double/float wird in Exponentialschreibweise ausgegeben (kleines e / großes E in der Ausgabe)
+%p => gibt die Speicheradresse einer Variable aus. & - Zeichen muss vor die Variable in Parameterliste gesetzt werden. Bsp: int a = 0; printf("%p\n", &a); (Konsolenausgabe) 0x7fffaedd7d... => Speicheradresse wird in Hexadezimalschreibweise ausgegeben
+%n => gibt an wie viele Zeichen im Formatstring bis zu %n stehen. Bsp: printf("Hello World%n\n"); printf("Zeichen: %d\n"); (Konsolenausgabe) Hellow World (\n) Zeichen: 11
+%% => gibt das % - Zeichen auf der Konsole aus. Bsp: printf("%%\n");
+
++ Struktur des Platzhalters
+
+%[flags][weite][.genauigkeit][modifizierer]typ
+
+-> Angaben in Klammern sind optional
+-> typ steht für d/f/g/c etc. (siehe oben)
+-> [modifizierer] ist ein Typmodifikator auf den Datentyp der ausgegeben werden soll (stehen direkt links neben dem typ)
+
+htyp => z.B. hd => Variable des Datentyps: int wird als short int ausgegeben 
+hhtyp => z.B. hhd => Variable des Datentyps: char wird als short int ausgegeben (8 bit => für Zahlen -128 bis 127)(wenn 'char = 'a';' dann wird eine Zahl ausgegeben die das Zeichen a aus dem ASCII Code repräsentiert)
+ltyp => z.B. lf => Variable des Datentyps: float wird als long float ausgegeben (standard für float)
+lltyp => z.B. llf => Variable des Datentyps: float wird als long long float ausgegeben
+Ltyp => z.B. Lf => Variable des Datentyps: long double wird als long double ausgegeben
+
+-> [.genauigkeit] gibt die Anzahl der Nachkommastellen bzw. Stellen für Ganzzahlen an; wenn weniger Stellen vorhanden sind, dann wird mit Nullen aufgefüllt (bei Ganzzahlen werden Nuller vorne eingefügt); wenn nicht vorhanden, dann wird bei float/double mit 6 Nachkommastellen gearbeitet
+-> [weite] gibt die Mindestanzahl der Zeichen bei der Ausgabe an. ist die Ausgabe kürzer, so wird mit Leerzeichen aufgefüllt, ist sie länger, dann werden Zeichen abgeschnitten 
+-> [flags] hier kommen z.B. in Frage: - für linksbündige Ausgabe oder + um positive Zahl mit Vorzeichen auszugeben
+
+int main(void){
+	int i = 0;
+	while (i <= 2){
+		printf("%+3d\n", i);
+		i = i + 1;
+	}
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+ +0
+ +1
+ +2
+
+-> [flags] hier kommen z.B. in Frage: Leerzeichen
+
+int main(void){
+	int i = -2;
+	while (i <= 2){
+		printf("% d\n", i);
+		i = i + 1;
+	}
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+-2
+-1
+ 0
+ 1
+ 2
+
+-> [flags] hier kommen z.B. in Frage: 0 oder # um bei Gleitkommazahlen vorne mit 0en aufzufüllen
+
+int main(void){
+	printf("%020.10d\n", 19.5); |flag = 0, weite = 20, .genauigkeit = .10
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+000000019.5000000000
+
+-> weitere Beispiele:       
+
+int main(void){
+	int i = 0;
+	while (i <= 2){
+		printf("%d\n", i);
+		i = i + 1;
+	}
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+0
+1
+2
+
+int main(void){
+	int i = 0;
+	while (i <= 2){
+		printf("%.3d\n", i);
+		i = i + 1;
+	}
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+000
+001
+002
+
+int main(void){
+	int i = 0;
+	while (i <= 2){
+		printf("%3d\n", i);
+		i = i + 1;
+	}
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+  0
+  1
+  2
+
+|Nachschlagen der Platzhalter und Modifizierer in UNIX-Manpages: $ man 3 printf (auf UNIX-Rechnern)(3 steht für den Teil der mit Programmieren zu tun hat)(passt zum derzeitig installierten Compiler)|
+
+1.5 EXIT_SUCCESS
+
+return EXIT_SUCCESS;
+
+- die erfolgreiche Beendigung des Programms wird von der Funktion zurückgegeben
+- hier könnte auch 'return 0' zurückgegeben werden, da ich den Datentyp des Rückgabewertes am Anfang der Funktion ja mit 'int' definiert habe, aber 'EXIT_SUCCESS' ist sauberer 
++ und kann dank '#include <stdlib.h>' auch statt '0' hingeschrieben werden
++ für die erfolgreiche Programmausführung steht aber immer 'EXIT_SUCCESS' statt '0' weil das standardisierte Konvention ist 
+-> so dass auf jedem Betriebssystem 'EXIT_SUCCESS' auf den Wert hinweist (im <stdlib.h>), der für erfolgreiche Ausführung des Programms steht 
+-> auf manch einem Betriebssystem könnte ein Wert ungleich 0 für erfolgreiche Ausführung des Programms stehen
+-> dieser Wert ungleich 0 würde dann im <stdlib.h> 'EXIT_SUCCESS' zugewiesen werden
+
+1.6 Compilierung einer .c Quelltextdatei namens 'test.c' auf der Konsole/Kommandozeile in eine Ausgabedatei namens 'test'
+
+$ gcc -Wall -Werror -std=c99 test.c -o test 
+
+- Wall, Werror, std=c99 sind alles Flags
+- Wall ("Warnings All") sagt dem Compiler, dass alle Warnungen angezeigt werden sollen
+- Werror ("Warnings Error") sagt dem Compiler, dass alle Warnungen als Errors behandelt werden sollen
+- std=c99 gibt den verwendeten Standard an hier c99
+- o ("Output") gibt an wie das Executable heißen soll hier 'test'
+
+1.7 Aufruf einer Ausgabedatei namens 'test' auf der Konsole/Kommandozeile 
+
+- um in das Verzeichnis zu gelangen wo die Datei liegt:
+
+$ cd "Arbeitsverzeichnis" 
+
+- Ausgabedatei aufrufen:
+
+$ ./test
+
+
+1.8 Zeichen die ich in C verwenden darf:
+
+- Buchstaben
+
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+
+a b c d e f g h i j k l m n o p q r s t u v w x y z
+
+- Dezimalziffern
+
+0 1 2 3 4 5 6 7 8 9
+
+- Grafiksymbole
+
+! " % & / ( ) [ ] { } \ ? = ‘ # + * ~ - _ . : ; , | < > ^
+
+- Whitespace-Zeichen
+
+Leerzeichen, Tabulator(horizontal, vertikal), neue Zeile, neue Seite
+
+
+1.9 Befehle auf der Commandline/Konsole
+
+$ cd Desktop
+
+- changed das Directory (=Arbeitsverzeichnis) 
+
+$ ls 
+
+- listed alle Dateien im aktuellen Aribeitsverzeichnis 
+
+$ rm test
+
+- removed die ausführbare Datei (=Executable = Binary) 'test' aus dem aktuellen Arbeitsverzeichnis
+
+
+1.10 Variablen
+
+- ein Programm arbeitet mit Daten, die in sogenannten Variablen gespeichert sind 
+- eine Variable ist eine Speicherstelle im Arbeitsspeicher/Hauptspeicher, die einen Namen hat
+- der Compiler kümmert sich darum wo die Variablen im Speicher abgelegt werden
+
+1.10.1 Eigenschaften einer Variable
+
+- NAME
++ Bezeichner einer Variable
++ ist eine Folge aus Buchstaben, Zahlen und Unterstrich
++ muss mit Buchstabe oder Unterstrich beginnen (Unterstrich am Anfang sollte vermieden werden - wird nur in Librarys verwendet)
++ Variablennamen werden stets klein geschrieben (Konvention) (C ist jedoch "case-sensitive", d.h. Groß- und Kleinschbuchstaben werden unterschieden - Großschreibung wird bei Konstanten verwendet)
++ es gibt reservierte Wörter in C, die ich nicht als Name für eine Variable verwenden darf  
+-> reservierte Schlüsselwörter: Typbezeichner (int, char, ...), while, if, ...
++ Umlaute (ö,ä,ü) und ß nirgendwo in einem Programm verwenden (wegen Problemen beim Compilieren)
++ Namen sollten sinnvoll sein:
+-> Vollständige Wörter statt einzelne Buchstaben verwenden (außer z.B. bei der Zählvariable c (counter))
+-> neue Teile bei längeren Namen mit _ beginnen (first_letter_in_text statt firstletterintext oder firstLetterInText ("camel-case", wegen den "Hügeln" - wird in Java verwendet))
+-> Abkürzungen vermeiden (byte_count statt bc)
+-> Englische Bezeichner verwenden 
+
+- WERT
++ Zahl
++ Zeichenkette (Buchstaben) 
++ Wahrheitswert (True / False oder 1 / 0)
+
++ der Wert einer Variable kann sich ändern 
++ wenn man den Wert einer Variable ändert nennt man das Zuweisung (="Assignment" / "Manipulation")
++ 'Variablen' wo ich den Wert nicht ändern kann heißen Konstanten
++ was für einen Wert die Variable annhemen kann wird vom Datentyp bestimmt 
++ die Werte kann ich auch lesen, d.h. wenn ich Variable a und variable b addiere, dann werden die Werte in den beiden Variablen gelesen und addiert
++ Werte können auch ausgegeben werden 
+-> mit (normalerweise) der Funktion  printf()
+
+- DATENTYP
++ c ist statically-typed (jede Variable hat genau einen festgelegten Typ - im Gegensatz zu Java which is dynamically-typed)
++ jede Variable hat einen Datentyp und man kann nur Werte von dem Datentyp drinnen speichern
++ der Datentyp schränkt also die Benutzung der Variable ein - der Datentyp bestimmt, welche Werte eine Variable annehmen kann und welche nicht
++ der Datentyp legt fest:
+-> den Wertebereich
+-> Speicherbedarf - bestimmt wie viel Speicherplatz ich für den Wert der Variable zu Verfügung habe - bestimmt auch wie groß der Wertebreich sein kann
+| Speicherbedarf-Angaben unterscheiden sich von System zu System. Unter C in Linux dürften die bit - Werte aber so passen - die Werte aus dem C-Standard sind die minimalen Größen - die Größen sind in folgenden Headerdateien genau festgelegt: 'limits.h', 'float.h', 'stdint.h'|
+-> Operationen, die auf den Datentyp angewandt werden dürfen
+-> Genauigkeit (bei Kommazahlen/Gleitkommazahlen)
+
+- Elementare Datentypen (95% aller Fälle):
+
++ Datentyp: char
+-> "character"
+-> Wertebreich: EIN EINZIGER Buchstabe (A-Z, a-z, Leerzeichen) oder EINE kleine Ganzzahle (-128 bis 127) ( Definition in einfachen Anführungsstrichen (z.B. char ch = 'A') (z.B. char ch = 'a') außer bei Zahlen (z.B. char ch = 120)
+-> Speicherbedarf: 8 bit (1 byte) 
+-> mögliche Operationen: keine - Zahlen werden interpretiert als Zeichen
+-> Formatierung der Variablen bei der Ausgabe durch: 
+%c => eine Variable des Datentyps: char wird als ein einzelnes Zeichen ausgegeben
+%hhd => eine Variable des Datentyps: char wird als Zahl (-128 bis 127) ausgegeben
+
+int main(void){
+	char ch = 65;
+	printf("%c %hhd\n", ch, ch);
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+A 65 
+|die Zahl ch = 65; gibt also das Zeichen A aus (bei %c) oder die Zahl 65 (bei %hdd)
+ woher weiß ich welche Zahl welchem Zeichen entspricht? - hängt davon ab welchen Zeichensatz der Computer verwendet (hier: ASCII aus USA)
+ andere Zeichensätzt werden in Ländern mit mehr Zeichen (Umlaute etc.) verwendet. 
+ (z.B. OEM (255 Zeichen), ANSI (255 Zeichen), ISO-Latin-1 (255 Zeichen), Unicode(65535 => zukunftsträchtig) - all jene haben aber am Anfang das Selbe - also die ersten 127 Zeichen entsprechen dem ASCII Code)|
+
++ Datentyp: int (gängiger Typ für Ganzzahlen)
+-> "integer" 
+-> Wertebereich: Ganzzahl (mit Vorzeichen) 
+-> Speicherbedarf: 32 bit (4 bytes) (=> die Zahlen von -2.14 Milliarden bis 2.14 Milliarden können verwendet werden)
+-> Formatierung der Variablen bei der Ausgabe durch:
+%d => Variable des Datentyps: int/short int/long int/long long int wird als Ganzzahl (mit Vorzeichen) ausgegeben
+
++ Datentyp: double (gängiger Typ für Kommazahlen)
+-> "double"
+-> Wertebereich: Kommazahl/Gleitkommazahl mit doppelter Genauigkeit (genauer als float)
+-> Speicherbedarf 64 bit (8 bytes) (=> die Zahlen von 2.2*10^(-308) bis 1.8*10^308 können verwendet werden)
+-> Formatierung der Variablen bei der Ausgabe durch:
+%lf => eine Variable des Datentyps: double wird als Gleitkommazahl ausgegeben
+
++ Datentyp: float
+-> "float"
+-> Wertebereich: Kommazahl/Gleitkommazahl mit einfacher Genauigkeit
+-> Speicherbedarf: 32 bit (4 bytes) (=> die Zahlen von 1.2*10^(-38) bis 3.4+10^38 können verwendet werden)
+-> Formatierung der Variablen bei der Ausgabe durch:
+%f => eine Variable des Datentyps: float wird als Gleitkommazahl ausgegeben
+
+- Weitere Datentypen:
+
++ Datentyp: short
+-> "short"
+-> Wertebereich: Ganzzahl (mit Vorzeichen)
+-> Speicherbedarf: 16 bit (2 bytes) (=> die Zahlen von -32768 bis 32767 können verwendet werden)(weniger als int => spart Speicherplatz bei kleinen Werten)
+-> Formatierung der Variablen bei der Ausgabe durch:
+%h => eine Variable des Datentyps: short wird als Ganzzahl ausgegeben 
+
++ Datentyp: long
+-> "long"
+-> Wertebereich: Ganzzahl (mit Vorzeichen)
+-> Speicherbedarf: 64 bit (8 bytes) (mehr als int => für Ganzzahlen die nicht in int platz haben) 
+-> Formatierung der Variablen bei der Ausgabe durch:
+%d => Variable des Datentyps: long/long int/long long int wird als Ganzzahl (mit Vorzeichen) ausgegeben
+
++ Datentyp: _Bool
+-> "buul"
+-> Beispiel:
+
+int main(void){
+	_Bool a = true;
+	_Bool b = false;
+	_Bool c = (23 > 40);
+	printf("%d %d %d\n", a, b, c);
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+1 0 0
+
+|wenn man <stdbool.h> inkludiert: kann man auch bool schreiben (weil Makro von bool auf _Bool) und die Werte true und false sind als Makros auf 1 bzw. 0 vorhanden; (Beispiel: bool b = false;)|
+
+-> Wertebreich: sinnvoll ist dieser Datentyp bei der Überprüfung von logischen Ausdrücken
+-> Speicherbedarf:
+-> Formatierung der Variablen bei der Ausgabe durch:
+%d => Variable des Datentyps: _bool/bool wird als 0 (false) oder 1 (true) ausgegeben  
+
+
+- Typmodifikatoren für Datentypen:
++ schreibe ich vor den Datentyp hin und verändert dann wie viel Speicherplatz jener einnimmt also wie groß die Zahlen sein können die ich drinnen speichern kann
+ 
++ Typmodifikator + Datentyp: short int
+-> "short-int"
+-> Wertebereich: Ganzzahl (mit Vorzeichen)
+-> Speicherbedarf: 16 bit (2 bytes) (int kann weggelassen werden => short int ist das Gleiche wie Datentyp: short)
+-> Formatierung der Variablen bei der Ausgabe durch:
+%d => Variable des Datentyps: short int wird als Ganzzahl (mit Vorzeichen) ausgegeben
+
++ Typmodifikator + Datentyp: long int
+-> "long-int"
+-> Wertebreich: Ganzzahl (mit Vorzeichen)
+-> Speicherbedarf: 64 bit (8 bytes) (int kann weggelassen werden => long int ist das Gleiche wie Datentyp: long) 
+-> Formatierung der Variablen bei der Ausgabe durch:
+%d => Variable des Datentyps: long int wird als Ganzzahl (mit Vorzeichen) ausgegeben
+
++ Typmodifikator + Datentyp: long double
+-> "long-double"
+-> Wertebereich: Kommazahl/Gleitkommazahl mit erweiterter Genauigkeit (kann je nach System identisch mit double sein)
+-> Speicherbedarf: 128 bit (16 bytes) (mehr als double => für Kommazahlen die nicht in double platz haben)
+-> Formatierung der Variablen bei der Ausgabe durch:
+
++ Typmodifikator + Datentyp: long long int (längster mögliche integer)
+-> "long-long-int"
+-> Wertebereich: Ganzzahl (mit Vorzeichen) (erweitert) (kann identisch mit long sein) (int kann weggelassen werden => long long int ist das Gleiche wie Datentyp: long long)
+-> Speicherbedarf: 128 bit (16 bytes) (mehr als long => für Ganzzahlen die nicht in long platz haben)
+-> Formatierung der Variablen bei der Ausgabe durch:
+%d => Variable des Datentyps: long long int wird als Ganzzahl (mit Vorzeichen) ausgegeben
+
+- weitere Typmodifikatoren: signed und unsigned
++ werden NUR bei Datentyp: char, int, short/short int, long/long int verwendet
++ werden verwendet um zu bestimmen ob ich in der Variable negative Zahlen auch speichern will (signed - standard bei jedem Datentyp) oder nur positive (unsigned)
+
++ Typmodifikator + Datentyp: signed + Datentyp
+-> ist dasselbe wie wenn ich nur den Datentyp angebe (daher wird z.B. signed int nicht verwendet sondern in dem Fall einfach nur int)
+-> heißt ich will in der Variable auch negative Zahlen speichern können
+-> ein bit wird also für die "Darstellung des Vorzeichens" reserviert (Erklärung: wenn ich die größt mögliche, positive Zahl (in Binärdarstellung) in Zweier-Komplement-Darstellung umwandeln will, dann muss ich ja (wie bei jeder anderen Zahl auch) mindestens eine 0 links vorne drann hängen. d.h. die größte Zahl ist 0111...1 und die kleinste Zahl ist 1000...1) 
+
++ Typmodifikator + Datentyp: unsigned + Datentyp
+-> heißt ich will in der Variable niemals negative Zahlen speichern => ich kann doppelt so viele positive Zahlen speichern
+-> Beispielsweise passen in den Datentyp: int (32 bit (4 bytes)) 4.3 Milliarden Ganzzahlen. normalerweise ist die Hälfte davon negativ und die andere Hälfte positiv. wenn ich 'unsigned int' schreibe kann ich also 4.3 Milliarden verschiedene positive Zahlen in der Variable speichern
+-> verwenden wir noch nicht - da sehr fehleranfällig (z.B. bei Vergleichsoperationen: es kann sein dass der Computer denkt dass unsigned int 40 kleiner ist als signed int -20)
+-> also wenn eine positive Zahl nicht in meinen int passt dann lieber einen long/long int verwenden
+
++ Ausnahme:
+-> Bei char ist es manchmal nicht vordefiniert, dass 'signed char' das gleiche ist wie nur 'char' 
+-> ob char signed oder unsigned ist hängt vom Computer ab (normalerwiese signed)
+
+- Adresse
++ Adresse wo der Wert der Variable im Arbeitsspeicher/Hauptspeicher gespeichert ist
++ die Speicherzellen des Arbeitsspeichers sind durchnummeriert und die Nummer iner Speicherzelle bezeichnet man als Adresse für eine Variable 
++ eine Variable belegt meistens eine Folge von zusammenhängenden Speicherzellen
++ die Adresse der Variable ist die Nummer der Speicherzelle, in der die Variable beginnt
+
+- Gültigkeitszeitraum
++ 
+
+- Sichtbarkeitsbereich
++ ich kann Bereiche in einem Programm festlegen wo ich nicht mehr auf eine Variable zugreifen kann weil sie aus dem Sichtbarkeitsbereich draußen ist
+
+1.10.2 Definition und Deklaration einer Variable (jede Variable die ich verwenden werde MUSS initialisiert werden - sonst kann ich sie nicht verwenden)
+
+- eine neue Variable wird definiert:
+
+int x = 1; 
+
+- hier wird eine Variable mit dem NAMEN x, dem DATENTYP int und dem WERT 1 definiert
+- man kann auch sagen: die Variable x wird mit 1 initialisiert 
+|Ort der Definition:
+ in ANSI C (Standard vor C99) muss eine Definition am Anfang eines Code-Blocks stattfinden.
+ ein Beispiel dafür ist der Anfang der main-Funktion.
+ in C99 kann eine Variable auch in einer beliebigen Zeile eines Code-Blocks definiert werden.|
+
+- eine neue Variable wird deklariert:
+ 
+int x;
+
+- hier wird eine Variable mit dem NAMEN x, dem DATENTYP x (und einem zufälligen WERT) deklariert 
+- jetzt wird für die Variable x mit dem Datentyp int ein Speicherplatz reserviert 
++ die Variable muss unbedingt noch mit einem WERT initialisiert werden!
+- Deklaration einer Variable umfasst Datentyp und Namen der Variable und macht dem Compiler somit bekannt mit welchem Typ ein bestimmter Variablenname verbunden werden muss
+- Beispiele:
+
+short counter;
+
++ 16 bits (2 bytes) werden für eine Ganzzahl im Speicher reserviert 
++ der Name der Variable ist counter 
+
+char letter1, letter2;
+
++ 2 Variablen werden deklariert: letter1 und letter2
++ für jede Variable werden 8 bits (1 byte) für eine Ganzzahl (-128...127) oder ein Buchstaben reserviert
++ der Inhalt wird als Zeichen interpretiert (keine Operationen möglich)
+
+double north, east, south, west;
+
++ 4 Variablen werden deklariert
++ für jede Variable werden 64 bits (8 bytes) für eine Gleitkommazahl reserviert 
++ Datentyp bei mehreren Variablen (mit demselben Datentyp) nur einmal angeben und Variablen mit einem , trennen
+
+1.10.3 Zuweisung einer Variable
+
+- der WERT der vorhandenen Variable x wird verändert: 
+
+x = 2;
+
+- Achtung: bei der Zuweisung wird immer die rechte Seite 'ausgerechnet' und das Ergebnis dem zugewiesen was auf der linken Seite steht
++ daher kann man auch mit einer Variable x auf der rechten Seite rechnen und das Ergebnis dann der Variable x wieder zuweisen 
+-> Variable x geht also mit einem Bestimmten Wert in die Zeile rein und geht mit einem neuen Wert (dem Ergebnis) wieder aus der Zeile raus 
+
+1.10.4 Ausgabe einer Variable
+
+- der WERT der Variable x mit dem Datentyp int wird als Ganzzahl (%d) auf der Konsole ausgegeben:
+
+printf("%d\n", x);
+
+- '%d' gibt an, dass hier die Variable x (die hier hinterm Komma steht) als Ganzzahl ausgegeben werden soll 
+- \n gibt an, dass nachdem x auf der Konsole ausgegeben wurde, ein Zeilenumbruch durchgeführt werden soll
+- 'printf' steht für "print Format" also der erste Teil in der Klammer '"%d\n"' gibt an wie die Variable x
+formatiert wird 
+- ich kann %d und \n auch vertauschen, dann wird zuerst eine "new-line" gemacht und dann der Wert ausgegeben
+
+- Ausgabe von Text und einer Variable des Datentyps int als Ganzzahl (%d):
+
+int main(void){
+	int a = 2;
+	int b = 2;
+  	int c = a+b;
+  	printf("Der Wert der Ganzzahl c lautet %d und ist die Summe von a+b\n", c);
+	return EXIT_SUCCESS;
+} 
+
+- Ausgabe von Text und mehreren Variablen des Datentyps int als Ganzzahl (%d):
+
+int main(void){
+	int a = 2;
+	int b = 2;
+  	int c = a+b;
+  	printf("Der Wert der Ganzzahl c lautet %d und ist die Summe von %d + %d\n", c, a, b);
+	return EXIT_SUCCESS;
+} 
+
+- Ausgabe von einer Variable des Datentyps char als Character (%c):
+
+int main(void){
+    
+	char a = 'k';
+    
+	printf("%c\n", a);
+    
+	return EXIT_SUCCESS;
+
+}
+
+(Konsolenausgabe)
+k
+
+- Ausgabe von einer Variable des Datentyps short als Ganzzahl (%hd):
+
+int main(void){
+    
+	short a = 2;
+    
+	printf("%hd\n", a);
+    
+	return EXIT_SUCCESS;
+
+}
+
+- Ausgabe von einer Variable des Datentyps double als Gleitkommazahl (%lf):
+
+int main(void){
+    
+	double a = 10.99;
+    
+	printf("%lf\n", a);
+    
+	return EXIT_SUCCESS;
+
+}
+
+- Ausgabe von mehreren Variablen des Datentyps float als Gleitkommazahl (%f):
+
+int main(void){
+    
+	double a = 10.99;
+   
+	double b = 5.99;
+
+	double c = 2.99;
+   
+	printf("%f\n%f\n%f\n", a, b, c);
+    
+	return EXIT_SUCCESS;
+
+}
+
+(Konsolenausgabe)
+10.990000
+5.990000
+2.990000
+
+
+1.10.4 Operatoren für Variablen
+
+- um mit Variablen zu arbeiten verwendet man Operatoren 
+
+- Arithmetische Operatoren:
++ Multiplizieren: *
++ Dividieren: /
++ Addieren: +
++ Subtrahieren: -
+
+- Modulo Operator: %
++ gibt den Rest einer Division an. Bsp: 
+
+int c = a % b;
+
+-> c wurde nun definiert und beinhaltet den Rest der Division von a durch b
+
+- Logische Operatoren:
++ logisches Und: &&
+-> Bsp.:
+
+int main(void){
+	int a = 1;
+	int b = 2;
+	int c = a&&b;
+	printf("c=%d\n", c);
+	return EXIT_SUCCESS;
+}
+
+(Konsolenausgabe)
+c=1
+
+-> wenn in beiden Variablen a und b ein Wert ungleich 0 (True) gespeichert ist, dann hat c den Wert 1
+-> ist in einer der Variablen a und b der Wert 0 (False) gespeichert, dann hat c den Wert 0 (False)
+
++ logisches Oder: ||
+-> Bsp.:
+
+int main(void){
+	int a = 0;
+	int b = 0;
+	int c = a||b;
+	printf("c=%d\n", c);
+	return EXIT_SUCCESS;
+}
+
+(Konsolenausgabe)
+c=0
+
+-> wenn in beiden Variablen a und b der Wert 0 (False) gespeichert ist, dann hat c den Wert 0 (False)
+-> wenn in mindestens einer der Variablen ein Wert ungleich 0 (True) gespeichert ist, dann hat c den Wert 1 (True)
+
++ logische Negation: !
+-> Bsp.:
+
+int main(void){
+	int a = 2;
+	int c = !a;
+	printf("c=%d\n", c);
+	return EXIT_SUCCESS;
+} 
+
+(Konsolenausgabe)
+c=0
+
+-> wenn a einen Wert ungleich 0 (True) hat, dann hat c den Wert 0 (False)
+-> wenn a den Wert 0 (False) gespeichert hat, dann hat c den Wert 1 (True)
+
++ Anwendungsbeispiel für logische Operatoren:
+-> ich will einen bestimmten Code ausführen, wenn a > 10 ist UND b < 11, dann würde ich schreiben:
+
+if (a > 10 && b < 11)
+
+-> ich will einen bestimmten Code ausführen, wenn a > 10 ist ODER b < 11, dann würde ich schreiben:
+
+if (a > 10 || b < 11)
+
+- Vergleichsoperatoren:
+a == b
+-> ist der Wert von a gleich dem Wert von b
+
+a != b
+-> ist der Wert von a ungleich dem Wert von b
+
+a > b
+-> ist der Wert von a größer als der Wert von b
+
+a < b
+-> ist der Wert von a kleiner als der Wert von b
+
+a >= b
+-> ist der Wert von a größer oder gleich wie der Wert von b
+
+a <= b
+-> ist der Wert von a kleiner oder gleich wie der Wert von b
+
++ Beispiel zu Verlgiechsoperatoren:
+
+int main(void){
+	int a = 1;
+	int b = 2;
+	int c = (a < b);
+	printf("c=%d\n", c);
+	return EXIT_SUCCESS;
+} 
+
+(Konsolenausgabe)
+c=1
+
+-> c hat hat den Wert 1, wenn die entsprechende Aussage (hier: a < b) wahr ist 
+-> c hat den Wert 0, wenn die entsprechende Aussage falsch ist 
+
+1.10.5 Ganzzahlliterale
+
+- sind Zahlen, Zeichenketten und Wahrheitswerte im Quelltext 
+- brauchen einen Datentyp
+- Beispiele:
++ Ganzzahlliteral 1234 vom Typ int: 'int a = 1234;' (hänge ich nichts hinten an das Ganzzahlliteral 1234 dran, dann geht der Compiler davon aus, dass es sich um ein Ganzzahlliteral vom Datentyp int handelt)
++ Ganzzahlliteral 1234 vom Typ long: 'long b = 1234L;' (hänge ich ein L hinten an das Ganzzahlliteral 1234 dran, dann weiß der Compiler, dass es sich um ein Ganzzahlliteral vom Datentyp long handelt)
++ Ganzzahlliteral 0xF vom Typ unsigned long long 'unsigned long long c = 0xFULL;' (0x besagt dass F eine Hexadeszimalzahl ist, F steht für die Hexadezimalzahl F, U steht für unsigned, LL steht für long long)
++ Crossover mit Gleitkommaliteralen:
+-> Ganzzahlliteral 20 vom Typ double: 'double d = 20;' (hier ist 20 an sich ein Ganzzahlliteral vom Datentyp int , das aber einem double zugewiesen wird => der Compiler konvertiert die 20 in 20.0)
+
+|Suffixe am Ende:
+ U für unsigned 
+ L für long
+ UL für unsigned long
+ LL für long long
+ ULL für unsigned long long|
+
+|Drei Arten die Zahlenschreibweise anzukündigen:
+ Dezimal beginnt mit einer Zahl von 0 verschieden.
+ Oktal beginnt immer mit 0.
+ Hexadezimal beginnt immer mit 0x.|
+
+1.10.6 Gleitkommaliterale
+
+- sind Gleitkommazahlen im Quelltext
+- enthalten einen Dezimalpunkt oder einen Exponenten oder beides
+- brauchen einen Datentyp
+- Beispiele:
++ Gleitkommalieral 10.5 vom Typ double: 'double e = 10.5;' (hänge ich nichts hinten an das Gleitkommaliteral 10.5 dran, dann geht der Compiler davon aus, dass es sich um ein Gleitkommaliteral vom Datentyp double handelt)
++ Gleitkommaliteral 10.5 vom Typ float: 'float f = 10.5F;' (hänge ich ein F hinten an das Gleitkommaliteral 10.5 dran, dann weiß der Compiler, dass es sich ausschließlich um ein Gleitkommaliteral vom Typ float handelt)
++ Gleitkommaliteral 19e-2 vom Typ double: 'double g = 19e-2;' (hier hänge ich wieder nichts hinten dran => Compiler behandelt Gleitkommaliteral 19e-2 als double) (Exponentenschreibweise)
+
+|Suffixe am Ende:
+ Ohne für double
+ F für float
+ L für long double|
+
+| verschiedene Darstellungen für z.B. 0.19: 19e-2 oder 1.9e-1 oder .19 | 
+|Exponentenschreibweise: Beispiele:
+ 19e-2 = 19*10^(-2) = 0.19
+ 19e2  = 19*10^(2)  = 1900|
+
+1.10.7 Zeichenliterale
+
+- wenn ich z.B. 'a' hinschreibe ist das ein Zeichenliteral
+- ein Zeichenliteral ist ganzzahlig und wird als Einzelzeichen innerhalb von einfachen Anführungsstrichen geschrieben
+- der Wert eines Zeichenliterals entspricht dem numerischen Wert des Zeichens im Zeichensatz des Computers 
++ '0' hat z.B. im ASCII Zeichensatz den Wert 48
+- Ersatzdarstellung (Zeichen die ich nicht schreiben kann: z.B. "new-line" etc.):
++ z.B. Steuerzeichen und spezielle Zeichen 
++ es ist immer nur ein Zeichen damit gemeint (der backslash ist hier also kein eigenes Zeichen)
++ Beispiele:
+\n = Zeilenumbruch
+\t = Tabulatorzeichen
+\' = einfaches Anführungszeichen (also wenn ich ein einfaches Anführungszeichen als Zeichen haben will (z.B. um einer Variable den Namen 'char a = \'a\';' zu geben) muss ich \' schreiben) - (Konsolenausgabe) 'a' 
+\0oo = gibt mir das Zeichen, das der Zahl oo im Oktalsystem entspricht
+\xhh = gibt mir das Zeichen, das der Zahl hh im Hexadezimalsystem entspricht (48 in Hexadezimalschreibweise ist 72 im Dezimalsystem und entspricht dem Zeichen 'H' im ASCII Code) 
+ Bsp:
+ char a = '\x48';
+ printf("%c\n", a);
+
+ (Konsolenausgabe)
+ H
+
+| wenn ich z.B. einen chinesischen Buchstaben ausgeben will, dann gebe ich den mithilfe des UNICODE des chinesischen Buchstaben aus (Konsole muss auf Unicode konfiguriert sein und PC muss die passende Font haben)|
+
+1.10.8 Typumwandlung
+
+- wenn man in C einen Datentyp in einen anderen konvertiert (umwandelt), führt man ein sogenanntes Type-Casting durch 
+- das Ziel ist einen einheitlichen Datentyp zu finden 
+- es gibt zwei Möglichkeiten, den Datentyp zu ändern: implizite Datentypumwandlung und explizite Datentypumwandlung
+
+1.10.8.1 implizite Datentypumwandlung:
+
+-> der Compiler nimmt eine automatische Konvertierung von einem zum anderen Datentyp vor 
+-> dies geschieht, wenn z.B. einem int-Wert ein float-Wert zugewiesen wird 
+-> Beispiel:
+
+4 + 3.5 = 7.5 (es erfolgt eine implizite Umwandlung des Datentyps von int 4 auf double 4.0) 
+
+-> es erfolgt also eine implizite (automatische) Umwandlung in den 'größeren' Datentyp (hier ist der größere Datentyp double)
+-> es ist also nicht notwendig, dass die Variablen eines Ausdrucks vom selben Typ sind 
+-> auch bei einer Zuweisung muss der Typ der Variablen nicht übereinstimmen 
+-> Umwandlungen können nur zwischen verträglichen Typen stattfinden 
+-> Regeln:
+
+Regel 1. gerechnet wird mit nichts Kleinerem als mit int 
+
+- char und short (die beiden kleineren Ganzzahldatentypen vor int) werden implizit und ihne Einwirkung des Programmierers nach int umgewandelt 
+- reicht der Datentyp int nicht aus, um einen Wert aufzunehmen, wird mit unsigned int gerechnet
+- ob ein char-Wert als vorzeichenhaft behandelt wird oder nicht ist von C nicht festgelegt und daher abhängig vom Compiler
+- Bsp.:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+	char zeich;
+	short short_ganz;
+	int int_ganz;
+	unsigned unsigned_ganz;
+	int wert;
+
+	printf("------------------------------------\n");
+	printf(" zeich: %zu Bytes\n", sizeof(zeich)); // zeich: 1 Bytes (wir geben ein char Zeichen mit sizeof aus)
+	printf(" 'x': %zu Bytes\n", sizeof('x')); // 'x' : 4 Bytes
+	printf("zeich+'a': %zu Bytes\n", sizeof(zeich + 'a')); // zeich+'a': 4 Bytes (wir rechnen mit 2 chars zeich und 'a' => werden beide in int umgewandelt, daher 4 Bytes 
+	printf("------------------------------------\n");
+	printf(" short_ganz: %zu Bytes\n", sizeof(short_ganz)); // short_ganz: 2 Bytes
+	printf(" 235: %zu Bytes\n", sizeof(235)); // 235: 4 bytes
+	printf(" -235: %zu Bytes\n", sizeof(-235)); // -235: 4 bytes
+	printf("short_ganz+12: %zu Bytes\n", sizeof(short_ganz + 12)); // short_ganz+12: 4 Bytes
+	printf("------------------------------------\n");
+	printf(" int_ganz: %zu Bytes\n", sizeof(int_ganz)); // int_ganz: 4 Bytes
+	printf(" 235: %zu Bytes\n", sizeof(235)); // 235: 4 Bytes
+	printf(" -235: %zu Bytes\n", sizeof(-235)); // -235: 4 Bytes
+	printf("int_ganz+12: %zu Bytes\n", sizeof(int_ganz + 12)); // int_ganz+12: 4 Bytes
+	printf("------------------------------------\n");
+	printf(" unsigned_ganz: %zu Bytes\n", sizeof(unsigned_ganz)); // unsigned_ganz: 4 Bytes
+	printf(" 235: %zu Bytes\n", sizeof(235)); // 235: 4 Bytes
+	printf("unsigned_ganz+12: %zu Bytes\n", sizeof(unsigned_ganz + 12)); // unsigned_ganz+12: 4 Bytes
+	printf("------------------------------------\n");
+	wert = (1000000000 + 2000000000) / 2; // (1000000000+2000000000)/2 =  //hier gibt es eine Warnung! (wegen Überlauf) - nach dem durch 2 dividieren sind wir zwar wieder im Wertebereich drinnen aber davor kommt es zum Überlauf
+	printf("(1000000000+2000000000)/2 = %d\n", wert); // -647483648
+	printf("------------------------------------\n");
+	wert = (1000000000 + 3000000000) / 2; // (1000000000+3000000000)/2 = 
+	printf("(1000000000+3000000000)/2 = %d\n", wert); // 2000000000
+	printf("------------------------------------\n");
+
+	return EXIT_SUCCESS;
+}
+
+- Bsp.:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+	unsigned char u_zeich = '\x84';
+	signed char s_zeich = '\x84';
+	int i1, i2;
+	i1 = u_zeich;
+	i2 = s_zeich;
+
+	printf("'%c' : %d %#x\n", i1, i1, i1); // '▒' : 132 0x84 // i1 wird einmal als Sonderzeichen dargestellt, dann als int und dann als hex // da wir mit unsigned arbeiten haben wir trotz char die Möglichkeit 132 auszugeben
+	printf("'%c' : %d %#x\n", i2, i2, i2); // '▒' : -124 0xffffff84 // i2 wird einmal als Sonderzeichen dargestellt, dann als int und dann als hex // arbeiten wir mit signed dann kommt ein verfälschtes Ergebnis raus (-124)
+
+	return EXIT_SUCCESS;
+}
+
+
+Regel 2. signed und unsigned
+
+- Umwandlung unsigned Typ in breiteren signed- oder unsigned-Typ 
++ ursprünglicher Wert bleibt unverändert
+
+- Umwandlung signed-Typ in einen gleich breiten oder breiteren unsigned-Typ
++ erhält die interene Bitdarstellung
++ Vorzeichenbit wird bei breiteren unsigned-Typ nach vorne verlängert
+-> beim signed haben wir ein Vorzeichen
+-> wenn jetzt der unsigned Typ breiter ist, wird das Vorzeichenbit nach vorne gestellt
+-> so bleibt das Vorzeichen erhalten
+
+- Umwandlung unsigned-Typ in einen gleich breiten signed-Typ:
++ Bitmuster wird im signed-Typ abgespeichert
+-> so könnte ein Wert den wir im unsigned noch haben nicht mehr dargestellt werden (weil zu groß)
+-> in diesem Fall schreibt der ANSI-C-Standard NICHT vor, was passieren soll! 
+-> es wird ein verfälschter negativer Wert ausgegeben 
+
+- Umwandlung signed- bzw. unsigned-Typ in einen kleineren signed-bzw. unsigned-Typ
++ Ergebnis hängt vom Compiler ab!
++ Typischerweise werden bits abgeschnitten! (verfälschte Werte)
+
+- Bsp.:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+	unsigned char u_char;
+	unsigned int u_int;
+	unsigned long int u_l_int;
+	signed long int s_l_int;
+	int int1, int2;
+	unsigned int u_int1, u_int2;
+	unsigned long int u_l_int1, u_l_int2;
+	u_char = 'a';
+	u_int = 234;
+	u_l_int = u_char;
+
+	printf(" %c (unsigned char) ---> %lu (unsigned long int)\n", u_char, u_l_int); // a (unsigned char) ---> 97 (unsigned long int)
+
+	u_l_int = u_int;
+
+	printf(" %u (unsigned int) ---> %lu (unsigned long int)\n", u_int, u_l_int); // 234 (unsigned int) ---> 234 (unsigned long int)
+
+	s_l_int = u_char;
+
+	printf(" %c (unsigned char) ---> %ld (signed long int)\n", u_char, s_l_int); // a (unsigned char) ---> 97 (signed long int)
+
+	s_l_int = u_int;
+
+	printf(" %d (unsigned int) ---> %ld (signed long int)\n\n", u_int, s_l_int); // 234 (unsigned int) ---> 234 (signed long int)
+
+	int1 = 0xfff;
+	int2 = -3;
+	u_int1 = int1;
+
+	printf(" %d (int) ---> %u (unsigned int) = %#x\n", int1, u_int1, u_int1); // 4095 (int) ---> 4095 (unsigned int) = 0xfff
+
+	u_int2 = int2;
+
+	printf(" %d (int) ---> %u (unsigned int) = %#x\n", int2, u_int2, u_int2); // -3 (int) ---> 4294967293 (unsigned int) = 0xfffffffd
+
+	u_l_int1 = int1;
+
+	printf(" %d (int) ---> %lu (unsigned long int) = %#lx\n", int1, u_l_int1, u_l_int1); // 4095 (int) ---> 4095 (unsigned long int) = 0xfff
+
+	u_l_int2 = int2;
+
+	printf(" %d (int) ---> %lu (unsigned long int) = %#lx = %ld (long int)\n\n", // -3 (int) ---> 18446744073709551613 (unsigned long int) = 0xfffffffffffffffd = -3 (long int)
+
+	int2, u_l_int2, u_l_int2, u_l_int2);
+	s_l_int = -3;
+	u_l_int = 0xabcdef;
+	u_char = s_l_int;
+
+	printf(" %#lx = %ld (signed long int) ---> %c (unsigned char) = %#x\n", s_l_int, s_l_int, // 0xfffffffffffffffd = -3 (signed long int) ---> ▒ (unsigned char) = 0xfd
+
+	u_char, u_char);
+	u_char = u_l_int;
+
+	printf(" %#lx = %lu (unsigned long int) ---> %c (unsigned char) = %#x\n", u_l_int, // 0xabcdef = 11259375 (unsigned long int) ---> ▒ (unsigned char) = 0xef
+
+	u_l_int, u_char, u_char);
+	u_int = s_l_int;
+
+	printf(" %#lx = %ld (signed long int) ---> %u (unsigned int) = %#x\n", s_l_int, s_l_int, // 0xfffffffffffffffd = -3 (signed long int) ---> 4294967293 (unsigned int) = 0xfffffffd
+
+	u_int, u_int);
+	u_int = u_l_int;
+
+	printf(" %#lx = %lu (unsigned long int) ---> %u (unsigned int) = %#x\n\n", u_l_int, // 0xabcdef = 11259375 (unsigned long int) ---> 11259375 (unsigned int) = 0xabcdef
+
+	u_l_int, u_int, u_int);
+	u_int = 123;
+	int1 = u_int;
+
+	printf(" %#x = %u (unsigned int) ---> %d (int) = %#x\n", u_int, u_int, int1, int1); // 0x7b = 123 (unsigned int) ---> 123 (int) = 0x7b
+
+	u_int = 50000;
+	int1 = u_int;
+
+	printf(" %#x = %u (unsigned int) ---> %d (int) = %#x\n", u_int, u_int, int1, int1); // 0xc350 = 50000 (unsigned int) ---> 50000 (int) = 0xc350
+
+	return EXIT_SUCCESS;
+}
+
+
+Regel 3. Gleitkommazahlen und Ganzzahlen
+
+- Umwandlung einer Gleitkommazahl in eine Ganzzahl
++ der Teil hinterm Komma wird abgeschnitten
++ liegt der ganzzahlige Anteil außerhab des Wertebereichs des Ganzzahltyps, dann ist das Verhalten undefiniert 
+-> wenn ich z.B. einen double (8 Byte) habe und der ganzzahlige Anteil ist größer als was ich im int (4 Byte) ablegen kann, wird das Ergebnis verfälscht
+
+- Umwandlung einer Ganzzahl in eine Gleitkommazahl
++ Umwandlung erfolgt
++ aber: liegt der Wert der Ganzzahl im Wertebereich der darstellbaren Gleitkommazahl, ist aber nicht darstellbar, dann ist das Ergebnis entweder der nächsthöhere oder der nächstniedrige darstellbare Wert.
+|bei Gleitkommazahlen gibt es einen Standard für die Darstellung und nicht jede Ganzzahl kann darin dargestellt werden => das Ergebnis ist entweder der nächsthöhere oder der nächstniedrige darstellbare Wert.|
+-> Ergebnis ist Implemeniterungsabhängig und nicht vom ANSI-C-Standard vorgeschrieben
++ liegt der Wert außerhalb des darstellbaren Bereichs, dann liegt undefiniertes Verhalten vor
+
+- Bsp.:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+	float gleit;
+	int ganz;
+	unsigned int u_ganz;
+	long int lang;
+	gleit = 7.33;
+	ganz = gleit;
+
+	printf("%f (float) ---> %d (int) = %#x\n", gleit, ganz, ganz); // 7.330000 (float) ---> 7 (int) = 0x7 
+	/* zuerst wird 7.33 einfach als Gleitkommazahl ausgegeben, dann wird ganz ausgegeben (enthält die in eine Ganzzahl umgewandelte
+	 * Gleitkommazahl, float -> int) und dann wird ganz in Hex ausgegeben*/
+
+	gleit = -3.7;
+	ganz = gleit;
+
+	printf("%f (float) ---> %d (int) = %#x\n", gleit, ganz, ganz); // -3.700000 (float) ---> -3 (int) = 0xfffffffd
+
+	gleit = 7.33;
+	u_ganz = gleit;
+
+	printf("%f (float) ---> %u (unsigned int) = %#x\n", gleit, u_ganz, u_ganz); // 7.330000 (float) ---> 7 (unsigned int) = 0x7
+
+	gleit = -3.7;
+	u_ganz = gleit;
+
+	printf("%f (float) ---> %u (unsigned int) = %#x\n", gleit, u_ganz, u_ganz); // -3.700000 (float) ---> 4294967293 (unsigned int) = 0xfffffffd
+
+	lang = 12345678;
+	gleit = lang; // wir konvertieren von long int auf float
+
+	printf("%ld (long int) ---> %.0f (float)\n", lang, gleit); // 12345678 (long int) ---> 12345678 (float) // float kann diese Zahl also darstellen
+
+	lang = 1234567890;
+	gleit = lang; // wir konvertieren von long int auf float
+
+	printf("%ld (long int) ---> %.0f (float)\n", lang, gleit); // 1234567890 (long int) ---> 1234567936 (float) // float kann diese Zahl also nicht mehr genau darstellen (verfälscht)
+	/* eine Zahl die als long int gespeichert ist kann (wenn zu groß) nicht mehr in float dargestellt werden*/
+
+	return EXIT_SUCCESS;
+}
+
+Regel 4. Konvertierung innerhalb von Gleitpunktzahlen (float, double, long double) 
+- 1. Fall: 
+
+float -> double
+float -> long double
+double -> long double
+
++ ursürünglicher Wert bleibt unverändert
+
+- 2. Fall:
+
+double -> float (vom größeren Gleitkommadatentyp in den kleineren Gleitkommadatentyp)
+long double -> float 
+long double -> double
+
++ falls der Wert größer ist als der Zieldatentyp, liegt undefiniertes Verhalten vor
++ ist der Wert nicht zu groß für den Zieldatentyp, kann aber dort trotzdem nicht genau dargestellt werden (weil dort weniger Bits zur Darstellung zur Verfügung stehen),
+dann ist das Ergebnis entweder der nächsthöhere oder nächstniedrige darstellbare Wert
++ ansonsten wird der Wert unverändert übernommen
+
+- Bsp.:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+	float einfach;
+	double doppelt;
+	long double lang_doppelt;
+	einfach = 4 * 1.23456;
+	doppelt = einfach;
+
+	printf("%f (float) ---> %f (double)\n", einfach, doppelt); // 4.938240 (float) ---> 4.938240 (double)
+
+	lang_doppelt = einfach;
+
+	printf("%f (float) ---> %Lf (long double)\n", einfach, lang_doppelt); // 4.938240 (float) ---> 4.938240 (long double)
+
+	doppelt = 4 * 1.23456;
+	lang_doppelt = doppelt;
+
+	printf("%lf (double) ---> %Lf (long double)\n", doppelt, lang_doppelt); // 4.938240 (double) ---> 4.938240 (long double)
+
+	doppelt = 4 * 1.23456;
+	einfach = doppelt;
+
+	printf("%.10lf (double) ---> %.10f (float)\n", doppelt, einfach); // 4.9382400000 (double) ---> 4.9382400513 (float)
+
+	lang_doppelt = 4 * 1.23456 + 12.2345256266535;
+	einfach = lang_doppelt;
+
+	printf("%.10Lf (long double) ---> %.10f (float)\n", lang_doppelt, einfach); // 17.1727656267 (long double) ---> 17.1727657318 (float)
+
+	doppelt = lang_doppelt;
+
+	printf("%.15Lf (long double) ---> %.15lf (double)\n", lang_doppelt, doppelt); // 17.172765626653501 (long double) ---> 17.172765626653501 (double)
+
+	lang_doppelt = 2.34e-103;
+	einfach = lang_doppelt;
+
+	printf("%.10Lg (long double) ---> %.10g (float)\n", lang_doppelt, einfach); // 2.34e-103 (long double) ---> 0 (float) // wird auf nächst darstellbaren Wert gerundet: hier 0
+
+return EXIT_SUCCESS;
+
+
+Regel 5. Übliche arithmetische Typumwandlungen
+- diese Umwandlungen werden bei binären Operatoren durchgeführt (bei Zuweisungen, beim logischen Und && und logischen Oder || kommt es zu keiner impliziten Typumwandlung)
++ das Ziel ist, einen gemeinsamen Typ der Variablen des binären Operators zu erhalten, der auch der Typ des Ergebnisses ist
+
+- Vertikale Umwandlung
++ wenn einer der beiden Variablen in einem Ausdruck einen weiter oben stehenden Datentyp hat, dann wird zuerst die andere Variable
+in diesen Datentyp umgewandelt (= promotion), bevor der Ausdruck berechnet wird 
+
+long double 
+    ↑
+double
+    ↑
+float
+    ↑
+unsigned long long
+    ↑
+long long
+    ↑
+unsigned long
+    ↑
+long int
+    ↑
+unsigned int 
+    ↑
+int
+
+- Hoizontale Umwandlung 
++ diese Umwandlung wird bei Berechnungen immer durchgeführt (weil mit nichts Kleinerem gerechnet wird als mit einem int)
+
+char -> short -> int
+
+- Bsp.:
+
+#include <stdio.h>
+#include <stdlib.h>
+int main(void) {
+	int a = 40;
+	char b = 'A';
+	char c = 'K';
+	long d;
+	float e = 1000.000;
+	double sum;
+	a = b + c;
+
+	printf ("%d\n", a); // 140 // ASCI-Code von 'A' und 'K' wird addiert
+
+	d = a + e;
+
+	printf ("%ld\n", d); // 1140 
+	/* a und e ergeben zunächst einen float  
+	 * aber beim Zuweisungsoperator wird immer in den Datentyp konvertiert der links steht (hier d, und d ist long bzw. long int)*/
+
+	sum = a + b + c + d + e; 
+
+	printf ("%f\n", sum); // 2420.000000
+
+	return EXIT_SUCCESS;
+}
+
+
+1.10.8.2 explizite Datentypumwandlung: 
+
+- der Programmierer kann die Konvertierung des Datentyps durch explizite Typumwandlung erzwingen
+- Compiler muss Typumwandlungen unterstützen! 
+- ein expliziter Cast ist ein in Klammern gesetzter Datentyp, der einem Ausdruck vorangestellt wird:
+
+(Datentyp) Ausdruck
+
++ damit wird der Ausdruck (der auch als Konstante oder in Form einer Variable vorliegen kann) zum (...hier...) angegebenen Datentyp konvertiert 
++ dadurch können auch Informationen verloren gehen. 
++ Cast muss an der richtigen Stelle platziert werden 
++ Priorität der Operatoren legt den Auswertungszeitpunkt fest 
+
+- Bsp:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+
+	int a = 40, b = 15; 
+	float x = 1000000.0; 
+
+	printf("%d\n", a / b); // 2
+	printf("%f\n", (float) a / b); // 2.666667 (a wird von int nach float umgewandelt und wenn jetzt a / b gerechnet wird, dann wird b in the 'höheren' Datentyp (float) umgewandelt) 
+	printf("%f\n", a / (float) b); // 2.666667 (hier sehen wir dass (cast) stärker bindet als dividieren)
+	printf("%f\n", (float)(a / b)); // 2.000000 (hier wird zuerst wegen den Klammern a/b gerechnet und dann das ergebnis auf float gecastet)
+	printf("%f\n", (float) a + b / 30); // 40.000000
+	printf("%f\n", (float) a + (double) b); // 55.000000
+	printf("%d\n", (short) x); // 16960 (x ist zu groß für short => undefiniertes Verhalten)
+
+	return EXIT_SUCCESS;
+}
+
+
+- Bsp:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+
+	int a = 10, b = 3;
+	double c = 4.0;
+
+	printf("%d\n", a / b); // 3
+	printf("%f\n", (double) a / b); // 3.333334
+	printf("%f\n", (double)(a / b)); // 3.000000
+	printf("%f\n", a / c); // 2.500000
+	printf("%d\n", a / (int) c); // 2
+	printf("%f\n", (double) (a + b) / 10); // 1.300000
+	printf("%f\n", (double) a + b / 10); // 10.000000 (weil b / 10 vorrang hat vor +)
+	printf("%f\n", (float) a + (double) c); // 14.000000
+	printf("%d\n", (int) c); // 4
+	printf("%d\n", a + b + (int) c); // 17
+	printf("%f\n", a + b + c); // 17.000000
+
+	return EXIT_SUCCESS;
+}
+
+
+
+1.10.9 Sequenzpunkte 
+
+- Seiteneffekt
++ ist eine Modifikation eines Datenobjekts 
++ Beispiel: a++; hat den Seiteneffekt, dass a um 1 erhöht wird
+
+- Sequenzpunkt (sequence point)
++ Punkt in der Programmausführung, bei dem alle bisherigen Seiteneffekte ausgewertet sein müssen  
+-> danach wird erst mir der Ausführung fortgefahren 
++ zwischen zwei Sequenzpunkten darf nur ein Schreibzugriff auf ein und dasselbe Objekt (Variable) stattfinden 
+-> falls neben dem Schreibzugriff zusätzliche Lesezugriffe vorhanden sind, müssen diese der Ermittlung des neuen Wertes dieses Objektes dienen
++ bei ++ und -- findet jeweils eine Lese- und ein Schreibzugriff statt 
+
++ Sequenzpunkte in C:
+
+; (Abschluss einer Anweisung)
+, (Komma - Operator) (z.B. Trennung von zwei Initialisierungsvariablen bei for-Schleifen)
+&& und ||
+? (Bedingungsoperator) 
+Funktionsaufrufe (call - Zeitpunkte)
+Direkt vor Rückkehr von Bibliotheksfunktionen
+Das Ende vollständiger Ausdrücke (bei if, while, for, switch)
+
+
+1.13 Aufzählungskonstanten
+
+|syntactic-sugar ... wird verwendet damit der Quelltext netter aussieht|
+
+- eine Aufzählung ist eine Folge von konstanten, ganzzahligen Werten, die irgendeinen Namen haben.
+- wird verwendet damit man bestimmte Zahlen auch als Zeichenkette/Namen in den Quelltext schreiben kann
+- keyword: enum (enumeration = Aufzählung) 
+- Beispiel 1:
+
+enum weekdays {Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday};
+
+- enum = Keyword ("enumeration = Aufzählung") um eine Aufzählung zu initialisieren
+- weekdays = Benennung/Typ der Aufzählung mit einem beliebigen Namen, hier: "weekdays"
++ diese Aufzählung hier beinhaltet sieben Aufzählungskonstanten: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
++ der erste Wert in den geschwungenen Klammern {} ist 0, dann 1, dann 2 usw. (hier: {0, 1, 2, 3, 4, 5, 6}) (jede Aufzählungskonstante hat also einen konstanten, ganzzahligen Wert vom Typ int)
+-> überall in meinem Programm kann ich nun statt 0, 1, 2 usw. Monday, Tuesday, Wednesday usw. hinschreiben
+|wurde vor c99 verwendet um einen Datentyp für bool zu haben (man konnte statt 0 und 1 für leserlichkeit FALSE und TRUE hinschreiben|
+
+- Beispiel 2:
+
+enum months {JAN = 1, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC};
+
++ hier wird JAN der Index 1 zugewiesen. 
++ von da wo ich den letzten Index gesetzt habe wird dann weiter gezählt. 
+-> d.h. FEB hat dann den Index 2, MAR den Index 3 usw. 
++ enum months wurde angelegt => months ist ein neuer Datentyp, den wir verwenden können
+-> wenn wir von diesem months Datentyp jetzt eine neue Variable anlegen wollen, müssen wir bei der Definition vorne enum anhängen. z.B. 'enum months mon = APR;' 
+(in die Variable mon des Datentyps months speichern wir APR (April) rein (einen der Werte die wir vorher in 'enum months {}' festgelegt haben). das APR steht aber eigentlich für die Zahl 4. d.h. wir speichern in die Variable mon eig. die Zahl 4 - mit APR schauts aber netter aus)
+(APR ist also ein Makro auf die Zahl 4)
+
+1.14 (symbolische) Konstanten 
+ 
+- ich erstelle mir basically ein Makro am Anfang meines Programms, so dass ich statt 3.141592654... einfach PI in meinem Programm verweden kann
+
+- erste Variante: Erstellung des Makros mit der define-Direktive am Anfang meines Programms (wird also vom Präprozessor bearbeitet)
+- Beispiel:
+
+#define PI 3.141592654
+...
+x = y * PI  (eigentlich steht da: x = y * 3.141592654)
+
++ wird nur textuell vom Präprozessore ersetzt (also keine Typprüfung vom Compiler!) 
+
+- zweite Variante: Definition der Konstante unter Verwendung des Keywords: const 
+- Beispiel:
+
+const double PI = 3.141592654
+...
+x = y * PI  (eigentlich steht da: x = y * 3.141592654)
+
++ diese Variante verwenden! um Datentyp-Probleme zu umgehen.
+
+- Beispiel für so eine (symbolische) Konstante/so ein Makro wäre z.B. EXIT_SUCCESS 
++ im <stdlib.h> file steht irgendwo: 
+
+#define EXIT_SUCCESS 0
+
+1.15 getchar und putchar
+
+- getchar liest ein einzelnes Zeichen von der Tastatur ein 
++ liefert einen Integer zurück
+
+- putchar gibt ein einzelnes Zeichen auf der Konsole aus
++ putchar wird ein Integer übergeben
+
+- Beispiel:
+
+#include <stdlib.h>
+#include <stdio.h>
+
+int main(){
+	int a;
+	a = getchar();
+	printf("%c\n", a);
+	putchar(a);
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe, wenn ich 2 eintippe)
+2
+2
+
+1.16 scanf
+
+- die Funktion scanf liest zeichenweise eine Folge von Eingabefeldern ein
++ für jedes Eingabefeld muss eine Adresse vorhanden sein, wobei die Eingabe mit dem Datentyp der Adresse übereinstimmen muss
+-> also der Datentp von der Variable die erst eingelesen wird muss genug Speicherplatz haben und mit dem Inhalt der Eingabe zusammenpassen
+|von einer Variable x kann man die Adresse mit &x ermitteln|
+
+- die Formatierung ist ähnlich zu printf
++ $ man 3 scanf (studieren!) 
+
+- scanf gibt auch etwas zurück! 
++ und zwar die Anzahl der eingegebenen Parameter
++ Bsp:
+int c, val1, val2;
+printf("Zwei Ganzzahlen eingeben: ");
+c = scanf("%d %d", &val1, &val2); // => c hat den Wert 2!
+
+
+- Beispiel 1: 
+
+#include <stdlib.h>
+#include <stdio.h>
+
+int main(){
+	int i;
+	printf("Geben sie eine Zahl ein: ");
+	scanf("%d", &i); //& damit er weiß, wo in den Speicher die Eingabe geschrieben werden soll
+	printf("Die Zahl, die Sie eingegeben haben, lautet %d\n", i);
+	return EXIT_SUCCESS;
+}
+
+- Beispiel 2:
+
+#include <stdlib.h>
+#include <stdio.h>
+  
+int main(){
+	int zahl1;
+	int zahl2;
+	printf("Geben sie zwei Zahlen ein (Beispiel: 2,3): \n");
+	scanf("%d, %d", &zahl1, &zahl2); // der Teil ',' zwischen den beiden %d's wird bei der Eingabe vom user erwartet! sonst fehler
+	printf("Die Zahlen, die Sie eingegeben haben, lauten %d und %d\n", zahl1, zahl2);
+	return EXIT_SUCCESS;
+}
+
+1.17 Operatoren 
+
+- mit Operatoren kann man mit Variablen arbeiten (z.B. deren Wert verändern) 
+
+- arbeitet der Operator mit einer Variable, dann nennt man den Operator unär (z.B. Vorzeichen)
+- arbeitet der Operator mit zwei Variablen, dann nennt man den Operator binär (z.B. + , - , * , / , Boolsche Operatoren: && ||)
+- arbeitet der Operator mit drei Variablen, dann nennt man den Operator ternär (Bedingungsoperator = for Schleife) 
+
+- steht der Operator vor der Variable mit der er arbeitet, dann nennt man das Präfixform (z.B Vorzeichen)
+- steht der Operator hinter der Variable mit der er arbeitet, dann nennt man das Postfixform (z.B. Inkrement- bzw. Dekrement Operator: x++ bzw. x-- Inhalt der Variable x wird um 1 erhöht und in x abgelegt bzw. Inhalt der Variable x wird um 1 verringert und in x abgelegt)
+- steht der Operator zwischen den Variablen mit denen er arbeitet, dann nennt man das Infixform 
+
+- Auswertung von Variablen und Operatoren
+-> linksassoziativ: Auswertung/Abarbeitung von links nach rechts (z.B. x + y + z wird von links abgearbeitet - also zuerst wird x + y berechnet und dann + z)
+-> rechtsassoziativ: Auswertung/Abarbeitung von rechts nach links (bestimmte Fälle - z.B. x = y = z 
+(das '=' ist auch ein Operator - er ordnet den Inhalt der rechten Variable der linken Variable zu - also wird zuerst y z zugewiesen und dann x y zugewiesen)
+
+- Operatoren:
+
+= 
+
++ "ist-gleich"
++ ist ein binärer Operator (arbeitet mit zwei Variablen) 
++ ist rechtsassoziativ (arbeitet also von rechts nach links)
++ Beispiele: 
+int a;
+a = 1;
+int b = 3;
+int a, b;
+a = b = 1;
+x = x + 1; (Inhalt der Variable x wird um 1 erhöht und in x abgelegt)
+
+
+- Arithmetische Operatoren:
+
++ werden für Berechnungen verwendet 
++ sind linksassoziativ
+
+- ("unäre Minus")
+
++ für Variablen des Datentyps: Ganzzahl oder Gleitkommazahl 
++ Anwendung: Vorzeichenwechsel 
++ Bsp:
+-a 
+
++ ("Plus")
+
++ für Variablen des Datentyps: Ganzzahl (int) oder Gleitkommazahl (float/double) 
++ Anwednung: Summe zweier Variablen berechnen 
++ Bsp:
+a = a + b
+-> kurze Schreibweise: (Additionszuweisung) ("syntactic-sugar")
+a += b (Variablen a und b werden addiert und das Ergebnis wird wieder in a gespeichert)
+
+
+- ("binäre Minus")
+
++ für Variablen des Datentyps: Ganzzahl oder Gleitkommazahl 
++ Anwendung: Differenz zweier Variablen berechnen
++ Bsp:
+a = a - b
+-> kurze Schreibweise: (Subtraktionszuweisung)
+a -= b
+
+* ("Multiplikation")
+
++ für Variablen des Datentyps: Ganzzahl oder Gleitkommazahl 
++ Anwendung: Produkt zweier Variablen berechnen
++ Bsp:
+a*b
+-> kurze Schreibweise: (Multiplikationszuweisung)
+a *= b
+
+/ ("Division")
+
++ für Variablen des Datentyps: Ganzzahl oder Gleitkommazahl 
++ Anwendung: Quotient zweier Variablen berechnen 
+-> bei Division zweier Ganzzahlen wird beim Ergebnis der Nachkommateil abgeschnitten
+-> bei Division zweier Gleitkommazahlen wird das Ergebnis genau angegeben
++ Bsp:
+a/b
+-> kurze Schreibweise: (Divisionszuweisung)
+a /= b
+
+% ("Modulo bzw. Rest-Operator")
+
++ für Variablen des Datentyps: Ganzzahl
++ Anwendung: Rest bei ganzzahliger Division: gibt nicht den Quotienten sondern den Rest von Divident/Divisior aus 
++ Bsp:
+a = a%b   (z.B. a = 9/2 => alte a ist 9 und neue a ist 1)    
+-> kurze Schreibweise
+a %= b    (der Rest der Division von a/b wird in a abgespeichert)
+
++ Beispiel 1 zu arithmetischen Operatoren:
+
+#include <stdio.h>
+#include <stdlib.h>
+static const double PI = 3.141592654;
+
+int main(void) {
+	int a = 5, b = 2, c = 7;
+	float x = 4.1f, y = 3.5f, z = 2.0f;
+	float sum = x + y + z;
+	printf("%d %d\n", a, b);
+	printf("%f\n", sum);
+	printf("%f\n", sum + 2.1);
+	printf("%d\n", a + b + c);
+	printf("%d\n", a / b);
+	printf("%f\n", x / z);
+	printf("%d\n", c % a);
+	printf("%f\n", a * PI);
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+5 2
+9.600000
+11.700000
+14
+2
+2.050000
+2
+15.707963
+
++ Beispiel 2 zu arithmetischen Operatoren:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+	int a = 5, b = 7, c = 8, d=6, e=4;
+
+	a+=b;
+	printf("%d %d\n", a, b);
+	b-=(c%b);
+	printf("%d %d\n", b, c);
+ 	c*=(d+e);
+ 	printf("%d %d %d\n", c, d, e);
+ 	d/=e;
+ 	printf("%d %d\n", d, e);
+ 	e%=e;
+ 	printf("%d\n", e);
+ 	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+12 7
+6 8
+80 6 4
+1 4 
+0
+
+1.17.1 Overflow 
+
+- wenn z.B. nach einer arithmetischen Operation bie Ganzzahlen das Ergebnis nicht in den Speicherplatz passt, dann tritt ein Überlauf/Overflow ein 
+- Overflow bekommt man also dann, wenn der Wert einer Variable zu groß für den Speicherplatz eines bestimmten Datentyps ist. 
+ z.B. gibt 'short a = 32768;' einen Overflow aus (maximal verfügbarer Speicherplatz einer Variable des Datentyps short ist 16 bit (also die Zahl +32767 ist die größt mögliche Zahl in diesem Datentyp))
+=> meist undefiniertes Verhalten bei Zahlen mit Vorzeichen (abhängig von der Umgebung)
+=> beginnt wieder bei 0 bei Zahlen ohne Vorzeichen 
+=> sollte immer vermieden werden 
+
+
+1.17.2 Inkrement- und Dekrementoperatoren
+
+- Inkrementoperator:
+
+a++
+
++ der Wert der Variable a wird um 1 erhöht und wieder in a abgelegt 
++ Bsp: a = a + 1 entspricht a += 1 entspricht a++
++ Varianten:
+-> Präinkrement:
+
+++a (a wird vor seiner weiteren Verwendung um 1 erhöht)
+
+Bsp:
+
+int a, b;
+a = 3;
+b = ++a * 3; //a ist hier schon 4
+
+=> b bekommt den Wert von a um 1 erhöht und multipliziert mit 3 zugewiesen (also b = 4 * 3)
+
+-> Postinkrement:
+
+a++ (a wird nach seiner weiteren Verwendung um 1 erhöht)
+
+Bsp:
+
+int a, c;
+a = 3;
+c = a++ * 3; 
+//a ist jetzt erst 4
+
+=> c bekommt den Wert von a multipliziert mit 3 zugewiesen (also c = 3 * 3) und danach wird a um 1 erhöht
+
+- Dekrementoperator:
+
+a--
+
++ der Wert der Variable a wird um 1 erniedrigt und wieder in a abgelegt 
++ Bsp: a = a - 1 entspricht a -= 1 entspricht a--
++ Varianten:
+-> Prädekrement:
+
+--a (a wird vor seiner weiteren Verwendung um 1 erniedrigt)
+
+Bsp:
+
+int a, b;
+a = 3;
+b = --a * 3; //a ist hier schon 2
+
+=> b bekommt den Wert von a um 1 erniedrigt und multipliziert mit 3 zugewiesen (also b = 2 * 3)
+
+-> Postdekrement:
+
+a-- (a wird nach seiner weiteren Verwendung um 1 erniedrigt)
+
+Bsp:
+
+int a, c;
+a = 3;
+c = a-- * 3; 
+//a ist jetzt erst 2
+
+=> c bekommt den Wert von a multipliziert mit 3 zugewiesen (also c = 3 * 3) und danach wird a um 1 erniedrigt
+
+- Beispiel zu Inkrement- und Dekrementoperatoren:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main (void) {
+	int i = 1;
+// beachte: der Wert einer Variable (hier: i) kann auch durch Ausdrücke in printf für das Programm einen neuen Wert annehmen 
+	printf("%d \n", i--);
+	printf("%d \n", ++i); // gibt 1 aus, weil i in der Zeile drüber (nachdem es ausgegeben wurde) um 1 erniedrigt wurde (=> i = 0) und in dieser Zeile aber (vor der Ausgabe) wieder um 1 erhöht wird (=> i = 1) 
+	printf("%d \n", i++ * 2);
+	printf("%d \n", --i * 2);
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+1
+1 
+2
+2
+
+1.17.3 Unterschied zwischen Ausdruck und Anweisung 
+
+- Ausdruck (engl. expression):
++ ist eine Kombination von Operatoren und Variablen 
++ ein Ausdruck kann damit Teil eines größeren Ausdrucks sein 
++ z.B. hat der Ausdruck 3 + 4 den Wert 7 
+
+- Anweisung (engl. statement):
++ durch anhängen eines Semikolons ( ; ) wird aus einem Ausdruck eine Anweisung (einfach Anweisung) 
++ Anweisungen können keinen Wert haben (sie können nicht Teil eines größeren Ausdrucks sein) 
++ eine Anweisung führt Befehle aus z.B. kann einer Variable der Wert eines Ausdrucks zugewiesen werden (x = 3 + 4;)
++ 3 + 4; ist möglich aber nicht sinnvoll - sollte zugewiesen werden. i++; ist möglich und sinnvoll, da ++ einen sogenannten Seiteneffekt hat (i wird um 1 erhöht) 
++ also ist eine Anweisung dann sinnvoll wenn ich mit ihr einen Seiteneffekt kreiere 
+
+1.17.4 Vergleichsoperatoren 
+
+- hat ein Ausdruck den Wert 0 dann wird er als false interpretiert 
+- hat ein Ausdruck einen Wert ungleich 0 dann wird er als true interpretiert 
+- ein Ausdruck der einen Vergleichsoperator enthält hat den Wert 0 (false) wenn der Ausdruck falsch ist 
+- ein Ausdruck der einen Vergleichsoperator enthält hat den Wert 1 (true) wenn der Ausdruck wahr ist
+
+- Vergleichsoperatoren:
+
+a < b ("a kleiner b")
+
+a > b ("a größer b")
+
+a <= b ("a kleiner gleich b")
+
+a >= b ("a größer gleich b")
+
+a == b ("a ist gleich b") 
+
+a != b ("a ist nicht b")
+
+- sind linksassoziativ 
+
+1.17.5 logische Operatoren:
+
+- mit Hilfe logischer Operatoren können Ausdrücke (arithmetische, vergleichende und zuweisende) als Aussagen miteinander verknüpft werden
++ der entstehende Ausdruck hat den Wert 1, wenn er als Aussage wahr ist, ansonsten hat er den Wert 0
+
+- logische Operatoren:
+
+a && b (logisches Und)
+a || b (logisches Oder)
+!a     (logische Negation)
+
+- die logischen Operatoren werden in C mittels 'short circuit evaluation' ausgewertet 
++ die Auswertung eines Ausdrucks bricht ab, sobald der endgültige Wert dieses Ausdrucks unabänderlich feststeht (z.B. ist der Wert des Ausdrucks: '1 || ...' hier schon unabänderlich - nämlich immer 1, da er immer wahr ist)
+
+- sind linksassoziativ 
+
+- Beispiel 1:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+	int a = 1, b = 1, z = 0;
+	float c = -0.5f;
+
+	printf("%d\n", a); // 1
+	printf("%d\n", !a); // 0
+	printf("%d\n", !(a - b)); // 1
+	printf("%d\n", !(a < b)); // 1
+	printf("%d\n", b < (c < a)); // 0
+	printf("%d\n", (a > c) && b); // 1
+	printf("%d\n", (a == 1) || (z = 5)); // 1
+	printf("%d\n", z); // 0
+
+	return EXIT_SUCCESS;
+}
+
+- Beispiel 2:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+ 	int a = 1, b = 2, c = 0;
+ 	double d = 1.5;
+
+ 	printf("%d\n", b); // 2
+ 	printf("%d\n", !b); // 0
+ 	printf("%d\n", !(a - b + 1)); // 1
+ 	printf("%d\n", b > (d > a)); // 1
+ 	printf("%d\n", !(a <= b)); // 0
+ 	printf("%d\n", (a > d) || c); // 0
+ 	printf("%d\n", (a == 1) && (c = 1)); // 1 (weil c 1 zugewiesen wird)
+ 	printf("%d\n", c); // 1 (weil c eine Zeile drüber 1 zugewiesen wurde)
+
+	return EXIT_SUCCESS;
+}
+
+1.17.6 Bedingter Operator (Bedingungsoperator)
+
+- einzigster ternärer-Operatore in C (arbeitet der Operator mit drei Variablen, dann nennt man den Operator ternär)
+- ist rechtsassoziativ
+- kann als Anweisung eine ganze Funktion ersetzen (einzigartig) 
+- hat die Form:
+
+A ? B : C ("der gesamte Ausdruck entspricht B, falls A als Aussage wahr ist, ansonsten entspricht er C")
+
+- Beispiele:
+
+even = (a % 2 == 0) ? 1 : 0; (even enthält genau dann den Wert 1 wenn der Wert von a gerade ist) 
+
+maxab = (a > b) ? a : b; (maxab enthält den Wert der größeren Variable a oder b) 
+
+
+1.17.7 Präzedenz (Priorität) von Operatoren
+
+- wie in der Mathemtik spielt es auch in C eine wichtige Rollen, in welcher Reihenfolge ein Ausdruck berechnet wird (5 + 2 * 3 ergibt 11 und nicht 21) 
+- Operatoren haben unterschiedliche Prioritäten (Präzedenzen) 
++ ähnlich zu "Punkt vor Strich" 
++ Präzedenzen regeln die implizite Klammerung in Ausdrücken 
++ Präzedenz ist zu unterscheiden von der Assoziativität 
+-> Assoziativität ist wichtig bei Ausdrücken mit einem Operator: ein Ausdruck kann links- oder rechts-assoziativ sein (z.B. 5 - 4 ist links-assoziativ)
+-> Präzedenz ist wichtig bei Ausdrücken mit mehreren Operatoren: welcher Ausdruck bindet stärker bzw. schwächer (z.B. 5 + 2 * 3 hier bindet das * stärker als das +)
+
+- Präzedenz und Assoziativität von Operatoren:
+
+Präzedenz (von stark bis schwach) | Assoziativität
+
+(), [], {}, ->, ., ++, -- | links
+!, ~, ++, --, +, -, *, &, sizeof | rechts
+(type) (cast-Operator) | rechts
+*, /, % | links
++, - | links
+<<, >> (shift-Operatoren) | links
+<, <=, >, >= | links
+==, != | links
+& | links
+^ | links
+| | links
+&& | links
+|| | links
+?: | rechts
+=, +=, -=, *=, /=, %=, &=, ^=, |=, <<=, >>= | rechts
+, | links
+
+- Reihenfolge der Auswertung:
++ A * b + C * D wird von links nach rechts bearbeitet (linksassoziativ) aber der Compiler kann selbst bestimmen, welcher "Teilausdruck" (also A * B oder C * D) zuerst ausgewertet wird
++ man sollte sich beim Programmieren nie auf eine bestimmte Reihenfolge verlassen 
+
+1.17.8 Bitoperationen 
+
+- mit diesen Operatoren wird ein direkter Zugriff auf die binäre Darstellung von Ganzzahlen unterstützt
+- C besitzt vier logische Bit-Operatoren:
+
+& (Und-Operator für Bits)
+| (Oder-Operator für Bits)
+^ (Exklusive-Oder-Operator für Bits (XOR))
+~ (Negationsoperator für Bits)
+
+- C besitzt zwei Shift-Operatoren:
+
+>> (rechtsshift-Operator, Bits werden nach rechts verschoben, dabei gehen die niederwertigsten Bits verloren, neue freie Stellen werden mit Nullen aufgefüllt) 
+<< (linksshift-Operator, Bits werden nach links verschoben, dabei gehen die höherwertigen Bits verloren, neue freie Stellen werden mit Nullen aufgefüllt) 
+
++ Beispiel:
+-> wir haben zwei Variablen mit dem Datentyp Char (also 1 Byte / 8 Bits Speicherbedarf)
+
+ 10100110 /* wenn ich bei dieser Binärzahl den zweitniedrigsten Wert immer auf 0 setzen möchte, dann kann ich diese Binärzal einfach mit einem 
+&11111101  * Und-Operator für Bits und einer weiteren Binärzahl verbinden 
+ 10100100  * so ist der zweitniedrigste Wert immer 0 */
+
+- Zuweisungsoperatoren für Bitoperationen:
+
+&= 
+|=
+^=
+<<=
+>>=
+
+- Beispiel:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+	int a = 14;
+	short b = 32;
+	short c = 47;
+
+	printf("%d\n", a & 0); // 1110 & 0000 = 0000
+	printf("%d\n", a | 1); // 1110 | 0001 = 1111
+	printf("%d\n", a ^ 5); // 1110 ^ 0101 = 1011
+	printf("%hd\n", ~b);
+	/* Negation der gesamten Zahl b, d.h.
+	* ... 0000 0010 0000 = ... 1111 1101 1111 */
+	printf("%hd\n", b << 2);// Multiplikation mit 4
+	printf("%hd\n", b >> 3);// Division durch 8
+	printf("%hd\n", c >> 4);// Division durch 16
+
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+0
+15
+11
+-33
+128
+4
+2
+
+#include <stdio.h>
+#include <stdlib.h>
+
+	int main(void) {
+	char a = 15;
+	char b = 32;
+	char c = 17;
+	char d = 254;
+
+	printf("%d\n", a & 0); // 0
+	printf("%d\n", b | 1); // 33
+	printf("%d\n", c ^ 3); // 18
+	printf("%d\n", ~d); // 1
+	printf("%d\n", b << 2); // 128
+	printf("%d\n", b >> 1); // 16
+	printf("%d\n", b >> 4); // 2
+
+	return EXIT_SUCCESS;
+}
+
+1.17.9 sizeof-Operator
+
+- ermittelt die Größe von Datentypen und Datenobjekten (z.B. Variablen, Ausdrücke) im Hauptspeicher in Bytes 
+- kann also auf eine Variable, einen Ausdruck oder Typbezeichner angewendet werden 
++ ein Ausdruck wird nicht ausgewertet, es wird nur dessen Größe bestimmt
+- ist wichtig um später plattform-unabhängig programmieren zu können 
+- Beispiele:
+
+printf("%zu\n", sizeof(char)); // 1 (byte)
+printf("%zu\n", sizeof(short)); // 2
+printf("%zu\n", sizeof(int)); // 4
+printf("%zu\n", sizeof(long)); // 8
+printf("%zu\n", sizeof(long long)); // 8
+printf("%zu\n", sizeof(float)); // 4
+printf("%zu\n", sizeof(double)); // 8
+printf("%zu\n", sizeof(long double)); // 16
+printf("%zu\n", sizeof(123 + 456)); // 4 (weil das Ergebnis ein integer ist)  
+
+- Rückgabetyp:
++ sizeof() liefert ein Ergebnis vom Typ unsigned long oder unsigned int 
++ Ergebnis ist vom Typ size_t (definiert in stddef.h)
++ Architekturabhängig (32 / 64 bit)
++ muss bei Berechnungen bzw. Vergleichen berücksichtigt werden 
+
+
+1.18 Kontrollstrukturen
+
+- die Sequenz ist das einfachste Kontrollflusselement (einzelnen Zeilen des Programms werden sequentiell abgearbeitet)
+- sehr oft will man aber bestimte Anweisungen auswählen oder wiederholen
+- Kontrollstrukturen definieren die Reihenfolge, in der Anweisungen durchgeführt werden
+
+1.18.1 Anweisungen und Blöcke
+
+- Anweisung
++ aus einem Ausdruck (z.B. x * 3) wird eine Anweisung, wenn ein Semikolon ( ; ) folgt. 
++ Beispiele:
+x * 3;
+i++;
+printf(...);
+
+- Block 
++ alles zwischen { und } ergibt einen Block 
++ ein Block ist syntaktisch äquivalent zu einer einzelnen Anweisung (compound statement) (relevant beim Testen - der gesamte Block wird durchlaufen)
++ Blöcke kann man nauch ineinander Schachteln (z.B. eine if-Verzweigung in einer while-Schleife) 
++ nach der rechten } steht kein Semikolon
+
+1.18.2 Verzweigung (= Selektion / Alternative)
+
+- mit Verzweigungen kann man den Ablauf des Programms beeinflussen, indem man logische Bedingungen definiert und dmit entscheidet, an welcher Stelle das Programm fortgesetzt werden soll 
+- die Bedingung von der die Verzweigung abhängt ist ein logischer Ausdruck
+- in C gibt es 2 Verzweigungen:
++ if 
++ switch
+- daneben gibt es den ternären Bedingungsoperator
+
+1.18.2.1 if-Verzweigung
+
+- Allgemeine Form:
+
+if ("Ausdruck/Bedingung")
+{
+	"Anweisung_1/Bedingter Block - wird ausgeführt wenn Bedingung WAHR ist"
+}
+else
+{
+	"Anweisung_2/Bedingter Block - wird ausgeführt wenn Bedingung FALSCH ist"
+}
+
+- Ablauf:
++ der Ausdruck in Klammern wird berechnet
++ hat der Ausdruck einen von 0 verschiedenen Wert (Ausdruck trifft zu/ist wahr), dann wird Anweisung_1 ausgeführt 
++ hat der Ausdruck den Wert 0 (Ausdruck trifft nicht zu), dann wird Anweisung_2 ausgeführt
+
++ Bsp:
+
+int main(void){
+	int a = 2;
+
+	if (a % 2 == 0){
+		printf("%d ist gerade \n", a);
+	}
+
+	else{
+		printf("%d ist ungerade \n", a);
+	}
+
+	return EXIT_SUCCESS;
+} 
+
+- zu beachten: der else-Zweig ist optional, d.h. dieser Zweig kann weggelassen werden (ist kein else vorhanden und der Ausdruck falsch wird der Code nach } ausgeführt,
+sprich die Gesamte if - Verzweigung wird ausgelassen)
+
+- Bsp:
+
+int main(void){
+	int a = 2;
+
+	if (a % 2 == 0){
+		printf("%d ist gerade \n", a);
+	}
+
+	if (a % 2 != 0){
+		printf("%d ist ungerade \n", a);
+	}
+
+	return EXIT_SUCCESS;
+} 
+
+- if-Anweisungen können verschachtelt werden (also eine if-Anweisung innerhalb einer if-Anweisung) 
+- bei nur einer Anweisung können die { } weggelassen werden
+
+- Bsp:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) 
+{
+	printf("Bitte ein Zeichen eingeben: \n");
+	int ival = getchar(); 
+
+	if (ival == 'a') 
+	{
+		printf("a wurde eingegeben!\n");
+	} 
+	else 
+	{
+		printf("Ein anderes Zeichen wurde eingegeben!\n");
+	}
+
+	printf("Ausserhalb der if-Verzweigung\n");
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+
+Bitte ein Zeichen eingeben:
+a
+a wurd eingegeben!
+Ausserhalb der if-Verzweigung
+
+- Bsp: Lösen von quadratischen Gleichungen
+
+(Achtung:Unter Linux muss beim gcc-Aufruf noch -lm am Ende angegeben werden (für math.h))
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h> // für Wurzel sqrt()
+
+int main(void) 
+{
+	double a, b, c;
+	printf("Bitte a, b und c eingeben: \n");
+	scanf("%lf %lf %lf", &a, &b, &c); // drei double Gleitpunktzahlen werden eingelesen
+	double d = b * b - 4 * a * c; // bei großer Lösungsformel ist die Diskriminante d = b^2 - 4ac
+
+	if (d < 0)
+	{
+		printf("Keine Lösung\n");
+	}
+	else 
+	{
+		if (d == 0)
+		{
+			printf("1 Lösung: %lf\n", -b / (2 * a));
+		}
+		else 
+		{
+			double sqrt_d = sqrt(d);
+			printf("2 Lösungen: %lf und %lf\n", (-b + sqrt_d) / (2 * a), (-b – sqrt_d) / (2 * a));
+		}
+	}
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+Bitte a, b und c eingeben:
+1.5 4 2.25
+2 Lösungen: -0.806287 und -1.860380
+
+(Achtung: Hier treten zwei typische numerische Fallstricke von Fließkommarechnungen auf! = Rundungsfehler weil die darstellbaren Stellen ja beschränkt sind)
+
+
+1.18.2.2 else-if-Verzweigung
+
+- Allgemeine Form:
+
+if ("Ausdruck_1/Bedingung_2")
+{
+	"Anweisung_1/Bedingter Block - wird ausgeführt wenn Bedingung_1 WAHR ist"
+}
+else if ("Ausdruck_2/Bedinung_2")
+{
+	"Anweisung_2/Bedingter Block - wird ausgeführt wenn Bedingung_1 FALSCH ist und Bedingung_2 WAHR ist"
+}
+...
+else if ("Ausdruck_n/Bedinung_n")
+{
+	"Anweisung_n/Bedingter Block - wird ausgeführt wenn Bedingung_1 und Bedingun_2 ... FALSCH sind und Bedingung_n WAHR ist"
+}
+else
+{
+	"Anweisung_else/Bedingter Block - wird ausgeführt wenn alle Bedingungen FALSCH sind"
+}
+
+- Ablauf:
++ ein Vergleich wird nach dem anderen durchgeführt
++ bei der ersten Bedingung, die wahr ist, wird die zugehörige Anweisung abgearbeitet und die Anweisungen danach nicht mehr abgearbeitet
+
+- Bsp:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) 
+{
+
+	int c = getchar();
+
+	if (c >= '0' && c <= '9')
+	{
+		printf("Sie haben eine Ziffer eingegeben!\n");
+	}
+	else if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+	{
+		printf("Sie haben einen Buchstaben eingegeben!\n");
+	}
+	else if (c == ' ' || c == '\n' || c == '\t')
+	{
+		printf("Sie haben ein Whitespace-Zeichen eingegeben!\n");
+	}
+	else
+	{
+		printf("Sie haben ein anderes Zeichen eingegeben!\n");
+	}
+	return EXIT_SUCCESS;
+}
+
+
+- gleiches Bsp: (mit Bibliotheksfunktionen)
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+int main(void) 
+{
+	int c = getchar();
+
+	if (isdigit(c)) // prüft ob eine Ziffer vorliegt - gibt 0 zurück wenn keine Ziffer vorliegt und 1 sonst 
+	{
+		printf("Sie haben eine Ziffer eingegeben!\n");
+	}
+	else if (isalpha(c)) // prüft ob ein Buchstabe vorliegt
+	{
+		printf("Sie haben einen Buchstaben eingegeben!\n");
+	}
+	else if (isspace(c)) // prüft ob ein Whitespace-Zeichen vorliegt 
+	{
+		printf("Sie haben ein Whitespace-Zeichen eingegeben!\n");
+	}
+	else
+	{
+		printf("Sie haben ein anderes Zeichen eingegeben!\n");
+	}
+	return EXIT_SUCCESS;
+}
+
+
+1.18.2.3 Dangling else
+
+- bekanntes Problem bei der Programmierung
+- ein else-Zweig bei zwei if-Anweisungen => wohin gehört der else-Zweig?
+- Bsp:
+
+if (counter < 5)
+	if (counter % 2 == 0) // counter ist kleiner 5 und gerade
+		printf("HERE1");
+else		      // counter ist kleiner 5 und ungerade
+	printf("HERE2");
+
++ Auflösung durch Compiler:
+-> else-Zweig gehört zum textuell letzten freien if im selben Block! - else gehört immer zum vorhergehenden if - obwohl es optisch so aussieht als ob es zum ersten if gehört
+-> counter mit Wert 7 führt zu keiner Ausgabe! (wir erwarten aber "HERE2"!)
+-> counter mit Wert 3 führt zur Ausgabe "HERE2"
+-> erzeugt Warnings: in solchen Fällen die Blockstruktur immer mit geschweiften Klammern klarstellen! (einfach immer geschweifte Klammern verwenden)
+
+- Bsp richtiggestellt:
+
+if (counter < 5)
+{
+	if (counter % 2 == 0) // counter ist kleiner 5 und gerade
+	{
+		printf("HERE1");
+	}
+}
+else		      // counter ist kleiner 5 
+{
+	printf("HERE2");
+}
+
+1.18.2.2 switch-Verzweigung
+
+- Allgemeine Form:
+
+switch (Ausdruck_1)
+{
+	case k1:
+		Anweisungen_1 // werden abgearbeitet, wenn k1 den Wert hat den auch Ausdruck_1 hat 
+		break; // wenn Anweisungen_1 abgearbeitet wurden wird die switch-Verzweigung verlassen
+	case k2: 
+		Anweisungen_2 // werden abgearbeitet, wenn k2 den Wert hat den auch Ausdruck_1 hat 
+		break;
+	...
+	case kn:
+		Anweisungen_n // // werden abgearbeitet, wenn kn den Wert hat den auch Ausdruck_1 hat 
+		break;
+	deafault: //  nicht notwendig aber sinnvoll 
+		Anweisungen_default // werden abgearbeitet, wenn Ausdruck_1 keinem kn Wert entspricht 
+		break; 
+}
+
+- Ablauf:
++ jeder Alternative ist mit einer Integer-Konstante (k1, k2 ...) oder einem konstanten Integer-Audruck (z.B. (a + b) ein Audruck der ja einfach für einen Wert steht) gekennzeichnet 
++ hat der Ausdruck in der switch-Verzweigung den gleichen Wert wie einer der integer Konstanten bzw. Ausdrücke, dann wird die Ausführung
+des Programms mit der Anweisung (den Anweisungen) hinter diesem case weitergeführt 
++ nach der Abarbeitung der Anweisungen wird die switch-Anweisung verlassen, falls ein break; eingefügt wurde 
+-> fehlt die break-Anweisung, dann werden alle nachfolgenden cases bis zu einem case mit break; oder dem Ende der switch-Verzweigung abgearbeitet ("fall through")
++ stimmt keiner der integer Konstanten bzw. Ausdrücke mit dem switch-Ausdruck überein:
+-> es wird zum default case gesprungen, falls jener vorhanden ist
+-> ist kein default vorhanden, dann wird die switch-Verzweigung verlassen 
+
+- Bsp:
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+int main(void) 
+{
+	int c = getchar();
+
+	if (isdigit(c))
+	{
+		switch(c) 
+		{
+			case '0': printf("Sie haben 0 eingegeben!\n"); break;
+			case '1': printf("Sie haben 1 eingegeben!\n"); break;
+			case '2': printf("Sie haben 2 eingegeben!\n"); break;
+			case '3':
+			case '4': printf("Sie haben 3 oder 4 eingegeben!\n"); break;
+			default: printf("Größer vier!\n"); break;
+		}
+	}
+	else
+	{
+		printf("Bitte geben Sie eine Zahl an!\n");
+	}
+	return EXIT_SUCCESS;
+}
+
+- Bsp: Formulieren Sie die nachfolgende if-Verzweigung in eine switch-Verzweigung um!
+
+printf("-1- Option 1\n");
+printf("-2- Option 2\n");
+printf("Funktion auswählen: \n");
+scanf("%d", &option);
+
+if(option == 1) 
+{
+	printf("Option 1 gewählt!\n");
+}
+else if (option == 2) 
+{
+	printf("Option 2 gewählt!\n");
+}
+else 
+{
+	printf("Falsche Eingabe!\n");
+}
+
+...umformulierung...
+
+switch(option)
+{
+	case 1: printf("Option 1 gewählt!\n"); break;
+	case 2: printf("Option 2 gewählt!\n"); break;
+	default: printf("Falsche Eingabe!\n"); break;
+}
+
+- switch-Verzweigung und else-if-Verzweigung im Vergleich:
++ switch prüft nur auf die Gleicheit von Werten im Gegensatz zur if-else-Verzweigung, bei der logische Ausdrücke ausgewertet werden 
+-> der Bewertungsausdruck der switch-Verzweigung kann nur ganzzahlige, konstante Werte oder Zeichen verarbeiten
++ switch ist übersichtlicher und leichter zu erweitern 
+
+1.18.3 Schleifen
+
+1.18.3.1 while-Schleife (Iteration = wiederholte Ausführung) |iterativ heißt etwas wird wiederholt ausgeführt und so kommt man zum Ergebnis| 
+
+- nennt man auch kopfgesteuerte Schleife 
+- die while Schleife wiederholt einen Block solange die Bedingung WAHR ist
+- Allgemeine Form
+
+while ("Ausdruck/Bedingung")
+{
+	"Anweisung/Bedingter Block - wird wiederholt solange die Bedingung WAHR ist"
+}
+
+- Ablauf:
++ zunächst wird der Ausdruck/die Bedingung ausgewertet
++ ist der Ausdruck WAHR (also von 0 verschieden), so werden die nachfolgenden Anweisungen bzw. der nachfolgende Block ausgeführt und abgearbeitet
++ anschließend wird WIEDER der Ausdruck/die Bedingung ausgewertet
+
+- Wichtig:
++ beliebiger Teil des Ausdrucks muss im Schleifenrumpf (Anweisung/Bedingter Block) verändert werden (ansonsten erhält man eine Endlosschleife)
+
+- Bsp:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+	long i = 2;
+	printf("N \tN^2 \tN^3 \n"); // \t is like \n only for tab instead of new line
+
+	while (i <= 1024) 
+	{
+		printf("%ld", i);
+		printf("%c", '\t');
+		printf("%ld", i * i);
+		printf("%c", '\t');
+ 		printf("%ld", i * i * i);
+ 		printf("\n");
+ 		i *= 2; // i = i * 2
+	}	
+
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+
+N    N^2     N^3
+2    4       8
+4    16      64
+8    64      512
+16   256     4096
+32   1024    32768
+64   4096    262144
+128  16384   2097152
+256  65536   16777216
+512  262144  134217728
+1024 1048576 1073741824
+
+
+
+1.18.3.2 for-Schleife (= Zählschleife) 
+
+- allgemeine Form:
+
+for (Ausdruck_1; Ausdruck_2; Ausdruck_3)
+{
+	Anweisungen
+}
+
+- Ablauf in 3 Schritten (typischer Ablauf)
+
++ Ausdruck_1: Deklaration(z.B. int c = 0;)/(Re-)Initialisierung(z.B. c = 0) einer Laufvariable, welche die Anzahl der Schleifendurchläufe zählt 
+-> die Laufvariable kann auch vom Typ float oder double sein (ist aber nicht sicher, da Gleichheitsüberprüfung problematisch sein kann!)
+(-> hier kann auch ein beliebiger Ausdruck stehen)
++ Ausdruck_2: Schleifenbedingung (z.B. c < 10;)
++ Ausdruck_3: Erhöhung des Wertes der Laufvariable nachdem die Anweisungen einmal durchlaufen wurden (z.B. c++;)
+-> danach wird wieder die Schleifenbedingung (Ausdruck_2) überprüft 
+(-> hier kann auch ein beliebiger Ausdruck stehen)
+
+- seit C99 kann man die Laufvariable auch gleich im Ausdruck_1 der for-Schleife deklarieren
++ Bsp: Deklaration(z.B. int c = 0;) statt (Re-)Initialisierung(z.B. i = 0) 
+(+ Schleifenvariablen, die innerhalb der Schleife deklariert werden, stehen nach dem Ende der for-Schleife nicht mehr zur Verfügung)
+
+- Bsp:
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+	long i;
+	printf("N \tN^2 \tN^3 \n"); // \t is like \n only for tab instead of new line
+
+	for (i = 2; i <= 1024; i *= 2)
+	{
+		printf("%ld", i);
+		printf("%c", '\t');
+		printf("%ld", i * i);
+		printf("%c", '\t');
+ 		printf("%ld", i * i * i);
+ 		printf("\n");
+	}	
+
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+
+N    N^2     N^3
+2    4       8
+4    16      64
+8    64      512
+16   256     4096
+32   1024    32768
+64   4096    262144
+128  16384   2097152
+256  65536   16777216
+512  262144  134217728
+1024 1048576 1073741824
+
+
+- Komma Operator
++ es ist auch möglich, im Schleifenkopf einer for-Schleife mehrere Anweisungen mit dem Komma-Operator getrennt zu verwenden 
++ dies wird zum Beispiel dazu verwendet, im ersten Ausdruck mehrere Variablen mit einem Wert zu initialisiern und/oder im dritten Ausdruck mehrere Variablen zu reinitialisieren
++ Bsp:
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) 
+{
+	for (int i = 1, j = 10; i < j; i++, j--) // zwei Laufvariablen; die auch in der Schleifenbedingung voneinander abhängig sind; und beide inkremiert bzw. dekremiert werden
+	{
+		printf("i=%d, j=%d\n", i, j);
+	}
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+
+i=1, j=10
+i=2, j=9
+i=3, j=8
+i=4, j=7
+i=5, j=6
+
+- Bsp: geschachtelte for-Schleife (um ALLE möglichen Kombinationen zweier Laufvariablen zu bekommen) 
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) 
+{
+	for(int i = 1; i < 5; i++)
+	{
+		for (int j = 1; j < 5; j++)
+		{	
+		printf("%d * %d = %d\n", i, j, i * j);
+		}
+	}
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+
+1 * 1 = 1
+1 * 2 = 2
+1 * 3 = 3
+1 * 4 = 4
+2 * 1 = 2
+2 * 2 = 4
+2 * 3 = 6
+2 * 4 = 8
+3 * 1 = 3
+3 * 2 = 6
+3 * 3 = 9
+3 * 4 = 12
+4 * 1 = 4
+4 * 2 = 8
+4 * 3 = 12
+4 * 4 = 16 
+
+
+- Spezialfälle bei for-Schleife
+
++ jeder der drei Ausdrücke kann entfallen
+-> fehlt Ausdruck_1, dann entfällt die Initialisierung
+-> fehlt Ausdruck_2, so ist die Bedinung immer wahr (Endlosschleife)
+-> fehlt Ausdruck_3, so fehlt die Erhöhung der Laufvariable 
+
++ Abbruch einer Endlosschleife
+-> ist mit break; im Block (bzw. Anweisungsbereich) möglich
+-> sollte aber nur in Ausnahmefällen verwendet werden
+
++ leere Anweisung 
+-> soll keine Anweisung ausgeführt werden, dann muss trotzdem ein einzelner Strichpunkt oder ein leerer Block angegeben werden
+-> for (;;) oder for (;1;) ist immer wahr (sind dann Endlosschleifen)
+
+
+1.18.3.3 while- oder for- Schleife?
+
+- wann ist eine for- und wann eine while-Schleife zu verwenden?
++ for-Schleifen werden üblicherweise dann verwendet, wenn ein ganzer Bereich 
+beginnend bei einem bestimmten Startwert bis zu einem vorgegebenen Endwert mit einer festen Schrittweite zu druchlaufen ist.
+
++ while-Schleifen dagegen werden verwendet, wenn lediglich ein Endkriterium gegeben ist, und es nicht vorhersagbar ist, wie oft die Schleifenanweisungen
+ausgeführt werden müssen, bis das Endkriterium zutrifft 
+
++ generell wähle man die besser lesbare Variante 
+
+- jede for-Schleife lässt sich durch eine while-Schleife formulieren und umgekehrt:
+
+for-Schleife:
+
+for (Ausdruck_1; Ausdruck_2; Ausdruck_3)
+{
+	Anweisungen
+}
+
+entsprechende while-Schleife:
+
+Ausdruck_1;
+while (Ausdruck_2)
+{
+	Anweisungen
+	Ausdruck_3
+}
+
+
+- Bsp: Formulieren Sie die while-Schleife als for-Schleife!
+
+int ival = 0;
+int sum = 0;
+while (ival <= 5) 
+{
+	if(ival % 2) // es werden die ungeraden Zahlen von 0 bis 5 aufsummiert 
+	sum += ival;
+	ival++;
+}
+printf("%d\n",sum);
+
+entsprechende for-Schleife:
+
+int sum = 0;
+for (int ival = 0; ival <= 5; ival++)
+{
+	if (ival % 2)
+	{
+		sum += ival;
+	}
+}
+printf("%d\n",sum);
+
+
+
+1.18.3.4 do-while-Schleife (fußgesteuerte-Schleife)
+
+- Abbruchbedingung steht am Ende 
+- allgemeine Form:
+
+do 
+{
+	Anweisung
+} while (Ausdruck);
+
+- Ablauf:
++ zuerst wird die Anweisung der Schleife auf jeden Fall einmal ausgeführt (annehmende Schleife)
++ danach wird der Ausdruck ausgewertet
++ die Anweisung und die Bewertung des Ausdrucks werden solange fortgeführt, solange der Ausdruck wahr ist (ungleich 0 ist).
+
+- Hinweis: am Ende steht ein Semikolon, da hier das Ende der Anweisung erreicht wird 
+
+- Bsp:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+
+	long i = 2;
+	printf("N \tN^2 \tN^3 \n");
+
+	do 
+	{
+		printf("%ld", i);
+		printf("%c", '\t');
+ 		printf("%ld", i * i);
+ 		printf("%c", '\t');
+ 		printf("%ld", i * i * i);
+ 		printf("\n");
+ 		i *= 2;
+	} while (i <= 1024);
+
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+
+N    N^2     N^3
+2    4       8
+4    16      64
+8    64      512
+16   256     4096
+32   1024    32768
+64   4096    262144
+128  16384   2097152
+256  65536   16777216
+512  262144  134217728
+1024 1048576 1073741824
+
+
+- Bsp: Zeichen zählen (unter Anwendung von Kontrollflussanweisungen)
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+int main(void) 
+{
+	int c, nwhite, nletter, nother, ndigit;
+	nwhite = nletter = nother = ndigit = 0;
+	
+	while ((c = getchar()) != '!') // sobald ein Ausrufezeichen eingegeben wird bricht die Zählung ab und die Statistiken werden unten geprintet
+	{
+		if (isdigit(c)) // wenn eine Ziffer eingegeben wird, dann wird der Zifferzähler ndigit um 1 erhöht
+		{
+			ndigit++;
+		}
+		else if (isalpha(c)) // wenn ein Buchstabe eingegeben wird, dann wird der Buchstabenzähler nletter um 1 erhöht
+		{
+			nletter++;
+		}
+		else if (isspace(c)) // wenn ein Leerzeichen eingegeben wird, dann wird der Leerzeichenzähler nwhite um 1 erhöht
+		{
+			nwhite++;
+		}
+		else // wenn sonstige Zeiche eingegeben werden, dann wird der Sonstigezähler nother um 1 erhöht
+		{
+			nother++;
+		}
+	}
+	printf("Statistik für den eingegebenen Text: \n");
+	printf("%d Ziffern\n", ndigit);
+	printf("%d Buchstaben\n", nletter);
+	printf("%d Zwischenräume\n", nwhite);
+	printf("%d andere Zeichen\n", nother);
+	return EXIT_SUCCESS;
+}
+
+
+
+1.18.3.5 Sprunganweisungen
+
+- der Kontrollfluss kann mit den Bedingten Verzweigungen und den Schleifen gesteuert werden
++ und man kann speziell mit break; und continue; den Kontrollfluss nochmal über-steuern
+
+- break
++ wird verwendet, um eine switch-Verzweigung oder eine Schleife zu beenden (zu verlassen)
++ bei verschachtelten Schleifen beendet break immer nur die innerste Schleife, in der break benutzt wird 
+
+- continue
++ mit dieser Anweisung wird der Rest der Anweisungsfolge einer Schleife übersprungen und ein neuer Schleifendurchlauf gestartet
+
+- Bsp:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) 
+{
+	for (int i = 0; i < 5; i++) 
+	{
+		for (int j = 0; j < 5; j++) 
+		{
+			if (j == 2)
+			{
+				break; // hiermit verlassen wir die innere for-Schleife! 
+			}
+			printf("j *** %d\n", j);
+		}
+		if (i > 1)
+		{
+			continue;
+		}
+		printf("i --- %d\n", i);
+	}
+	return EXIT_SUCCESS;
+}
+(Konsolenausgabe)
+
+j *** 0
+j *** 1
+i --- 0
+j *** 0
+j *** 1
+i --- 1
+j *** 0
+j *** 1
+j *** 0
+j *** 1
+j *** 0
+j *** 1
+
+
+1.18.3.6 Endloschleifen
+
+- sind Schleifen, die nach ihrer Abarbeitung erneut ausgeführt werden und bei denen kein Abbruchkriterium definiert wurde 
+- Programme in Multitasking-Systemen oder auf einem Server laufen häufig beabsichtigt als Endlosschleifen und warten auf eine Aktion (nennt man Polling-Verhalten)
+- Beendigung von Endlosschleifen
++ Sprung mit break aus Endlosschleife
++ man beendet die Funktion in der die Endlosschleife läuft mit return
++ Beendigung eines Programms mit exit 
++ Typische Erstellungsmöglichkeiten von Endlosschleifen
+-> while (1) {...}
+-> for (;;) {...} oder for (;1;) {...}
+
+
+1.18.3.7 goto
+
+- diese Anweisung bewirkt einen Sprung zu der Programmzeile, die mit einer Sprungmarke markiert wurde
+- nur in ganz wenigen Ausnahmefällen sinnvoll!
++ jedes Programm kann auch ohne goto relaisiert werden!
+- Theoretisches Beispiel:
+
+for (int i = 0; i < 5; i++)
+{
+	for (int j = 0; j < 5; j++) 
+	{
+		for (int k = 0; k < 5; k++)
+		{
+			if (i + j + k == 10) // wenn diese Bedingung erreicht wird (i=2, j=4, k=4) springt er zur Sprungmarke breakout
+			{
+				goto breakout; 
+			}
+		}
+		printf("%d %d\n", i, j);
+	}
+}
+breakout: // hier ist die Sprungmarke 
+printf("Nach goto!\n");
+(Konsolenausgabe)
+
+0 0
+0 1
+0 2
+0 3
+0 4
+1 0
+1 1
+1 2
+1 3
+1 4
+2 0
+2 1
+2 2
+2 3
+Nach goto!
+
+
+1.19 Funktionen
+
+- Funktionen haben die Aufgabe, Teile eines Programms unter einem eigenen Namen zusammenzufassen 
++ damit kann man dann diesen Programmteil mit einem Namen aufrufen 
++ beim Aufruf kann man Argumente mitgeben
++ Funktionen können auch Ergebnisse zurückliefern 
+
+- Funktionen sind ein Mittel zur Strukturierung eines Programms 
++ bei einem großen Programm kann man nicht alle Anweisungen in einem Block (main) zusammenfassen, da sonst der Überblick verloren geht
++ ein Programm sollte mit Hilfe von Funtkionen in modulare Teile aufgeteilt werden 
+
+- Funktionen sind ein Mittel zur Wiederverwendung 
++ eine Funktion kann an mehereren Stellen (mit unterschiedlichen Parametern) aufgerufen werden
++ die Funktion selbst ist nur einmal im Programm vorhanden und verkürzt daher den Programmtext 
+
+- Prozedurale Programmierung 
++ Zerlegung eines Algorithmus in überschaubare Teile, die anhand einer definierten Schnittstelle aufrufbar sind 
++ Unterstützung durch das Programmierkonzept der Funktion
++ Erweiterung des imperativen Paradigmas (eine Folge von Befehlen wird ausgeführt) 
+-> Folge von definierten Zustandsübergängen, bei denen festgelegt ist, wie Zustände verändert werden sollen 
+-> Unterstützung durch Kontrollstrukturen, Variablen und Zuweisungsoperator 
++ bei der prozeduralen Programmierung besteht kein Zusammenhalt zwischen Daten und Funktionen 
+-> in der objektorientierten Programmierung (nächster Schritt der Abstraktion) werden Daten und Funktionen in Objekten zusammengefasst (Java)
+
+- Definition von Funktionen
++ die Definition einer Funktion besteht aus
+-> Funktionskopf 
+-> Funktionsrumpf
++ die Aufgabe einer Funktion ist es, aus Eingabedaten Ausgabedaten zu erzeugen
+-> Eingabedaten:
+   - per Parameter übergebene Werte
+   - globale Variablen (außerhalb von Funktionen vereinbart - sollten nur in Ausnahmefällen verwendet werden)
+-> Ausgabedaten:
+   - Rückgabewert der Funktion
+   - Änderungen an Variablen (Pointer), deren Adresse an die Funktion über die Parameterliste übergeben wird 
+   - Änderungen an globalen Variablen (nur in Ausnahmenfällen)
+
+- Syntax einer Funktion:
+
+Spezifizierer Rückgabetyp Funktionsname (typ_1 formaler_parameter_1, ... typ_n formaler_parameter_n) //Funktionskopf
+{
+	...
+	Funktionsrumpf
+	...
+}
+
++ der Funktionskopf beschreibt, wie eine Funktion aufgerufen werden kann (also die Aufrufschnittstelle) 
++ der Funktionsrumpf enthält die Anweisungen der Funktion
++ der Funktionsname muss eindeutig sein
++ der Spezifizierer (speicherklasse) ist optional
++ die Parameter sind auch optional - Funktion ohne Parameter wird auch Prozedur gennant
+
+- Parameter 
+
++ die Parameterzahl wird vom Programmierer festgelet 
++ hat eine Funktion keine Parameter wird (void) geschrieben statt (typ_1 formaler_parameter_1, ... typ_n formaler_parameter_n)
++ Variadische Funktionen haben eine variable Anzahl von Parametern
+-> solche Parameterlisten werden mit einer Ellipse (drei Punkte am Ende der Parameterliste) konstruiert 
+-> ein Beispiel ist printf()
+
+- Funktionsaufruf 
+
++ eine Funktion wird einmal definiert und kann dann mehrmals aufgerufen werden
++ Funktionsaufruf, wenn keine Parameter an die Funktion übergeben werden:
+
+function();
+
++ Funktionsaufruf, wenn Argumente an die Funktion übergeben werden: 
+
+function(argument_1, argument_2,...,argument_n); 
+
+-> dort wo die Funktion aufgerufen wird, nennen wir die Werte in den Klammern: Argumente 
+   - Argumente werden auch Aktuelle Parameter genannt
+   - das sind die Werte die aktuell der Funktion übergeben werden und in der Funktion bearbeitet werden
+-> dort wo die Funktion definiert wird, nennnen wir die Werte in den Klammern: Parameter 
+   - Parameter werden auch Formale Parameter genannt
+   - Parameter sind "Platzhalter" für die Werte, die ihnen durch die Argumente übergeben werden 
+   - Parameter werden dann für die Befehle in der Funktion verwendet mit den Werten der aktuellen Paramter
+   - beim Aufruf einer Funktion mit Argumenten finden also Zuweisungen statt
+     + ein Parameter wird als lokale Variable (nur in der Funktion verwendbar) angelegt und mit dem Wert
+	   des entsprechenden Arguments initialisiert (dies wird auch als call-by-value bezeichnet)
+	 + das Argument kann auch ein beliebiger Ausdruck sein
+	 + implizite Typkonvertierung
+	   -> der Typ des Arguments kann sich vom Typ des Parameters unterscheiden 
+	   -> beim Aufruf der Funktion wird dann die implizite Typkonvertierung durchgeführt
+	      - ist das Argument z.B. vom Typ double und hat den Wert 10.5
+		  - der Parameter hat aber den Typ int 
+		  - dann wird double "runter-gecasted" auf int
+          - die im Funktionskopf versteckte Zuweisung sieht nämlich so aus: int formaler_Parameter = 10.5; => 10.5 wird zu 10 (wegen der impliziten Typkonvertierung)			
+	   -> Achtung: bei variadischen Argumenten wird float immer automatisch in double umgewandelt
+
+
+- Beispiel (ohne Parameter, ohne Rückgabewert):
+
+// hat eine Funktion keine Parameter wird (void) geschrieben statt (typ_1 formaler_parameter_1, ... typ_n formaler_parameter_n)
+// hat eine Funktion keinen Rückgabewert dann wird void geschrieben statt des Datentyps des Rückgabewertes 
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void hello(void) 
+{
+	printf("In der Funktion\n");
+}
+	
+int main(void) 
+{
+	printf("Vor der Funktion\n");
+	hello();
+	hello();
+	printf("Nach der Funktion\n");
+	return EXIT_SUCCESS;
+}
+(Ausgabe)
+Vor der Funktion
+In der Funktion
+In der Funktion
+Nach der Funktion
+
+- Beispiel (2 int-Parameter)
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void multi(int ival1, int ival2) // ival für "integer value"
+{
+	printf("%d * %d = %d\n", ival1, ival2, ival1 * ival2);
+}
+
+int main(void) 
+{
+	int val1 = 10, val2 = 20;
+	multi(10, 20);
+	multi(val1, val2);
+	multi(val1 + 10, val2 * 20); // hier werden die beiden Ausdrücke val1 + 10 und val2 * 20 als Argumente an die Parameter ival1 und ival2 übergeben 
+	multi(val1, val2); // wir sehen, wenn man eine Funktion aufruft und dabei Variablen in den Ausdrücken verwendet dann ändert sich der Wert der Variablen nicht 
+	return EXIT_SUCCESS;
+}
+(Ausgabe)
+10 * 20 = 200
+10 * 20 = 200
+20 * 400 = 8000
+10 * 20 = 200
+
+
+
+- Rücksprung aus einer Funktion (Rückgabewert)
+
++ die return-Anweisung beendet den Funktionsaufruf 
++ das Programm kehrt zu der Anweisung, in der die Funktion aufgerufen wurde, zurück und beendet diese Answeisung
+
+function(argument_1, argument_2,...,argument_n); 
+// hier geht's weiter nach der return-Anweisung innerhalb der Funktion (außer Funktion ist rekursiv)
+
++ hat eine Funktion keinen Rückgabewert, dann ist der Rückgabetyp void
+-> bei älteren Versionen von C wird implizit int angenommen, wenn kein Rückgabetyp angegeben wird - in C99 gibt es eine Warnung, wenn der Typ weggelassen wird
++ nach return kann ein beliebiger Name stehen (z.B. return variable1)
+-> wenn der Typ des Namens nicht mit dem Rückgabetyp (Typ den wir vor dem Funktionsnamen im Funktionskopf festgelegt haben) übereinstimmt, führt der Compiler eine implizite Typumwandlung durch
+-> bei z.B. return variable1 kommt es einfach zu einer Zuweisung wo der Funktionsname mit einem festgeleten Datentyp den Wert von variable1 zugewiesen bekommt
+   diesen Wert kann ich dann in der main wieder einer Variable zuweisen indem ich z.B. schreibe:
+
+int function (typ_1 parameter_1, ... typ_n parameter_n) //Funktionskopf
+{
+	...
+	Funktionsrumpf
+	...
+}
+
+// irgendwo in der main:
+
+int variable2 = function(argument_1,...,argument_n);
+
+-> return kann auch alleine verwendet werden - dann wird die Funktion verlassen, ohne einen Wert zurückzgeben
+
+
+- Beispiel
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int add(int a, int b) // Funktion add mit zwei Parametern a und b vom Typ int und Rückgabetyp int
+{
+	int sum; // sum ist eine lokale Variable, die nur in der Funktion add sichtbar ist
+	sum = a + b;
+	return sum;
+}
+
+int main(void) 
+{
+	int x, y, s;
+	s = add(10, 20); // Aufruf der FUnktion add mit den Argumenten 10 und 20, der Rückgabewert wird s zugewiesen
+	printf("%d\n", s);
+	x = s + 10;
+	y = s + s;
+	s = add(x, y); // Aufruf der Funtion add mit den Argumenten x und y, der Rückgabewert wird s zugewiesen
+	printf("%d\n", s);
+	return EXIT_SUCCESS;
+}
+(Ausgabe)
+30 
+100
+
+- Beispiel
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int add(int a, int b) 
+{
+	return a + b; // Funtion add jetzt mit minimaler Implementierung - hier zulässig
+}
+
+int main(void) // main selbst ist auch eine Funktion mit dem Rückgabetyp int. In diesem Fall wird main nichts übergeben
+{
+	int x, y, s;
+	s = add(10, 20);
+	printf("%d\n", s); // printf() ist auch ein Funktionsaufruf einer Funktion, die uns schon zur Verfügung gestellt wurde (aus stdio.h)
+	x = s + 10;
+	y = s + s;
+	s = add(x, y);
+	printf("%d\n", s);
+	return EXIT_SUCCESS;
+}
+(Ausgabe)
+30 
+100
+
+- Rücksprung aus einer Funktion (Rückgabewert)
+
++ der Rückgabewert kann (muss aber nicht) verwendet werden
+-> Rückgabewert wird einer Variable zugewiesen 
+-> Rückgabewert wird in einem Ausdruck verwendet 
++ Funktionsaufruf kann auch nur als reine Ausdrucksanweisung (durch Anhänge eines Strichpunkts) vorkommen:
+
+function();
+
+-> macht man wenn die Funktion nur Seiteneffekte hat und keine wichtigen Berechnungen für das Programm durchführt
+
+|Seiteneffekt einer Funktion: z.B. wenn die Funktion eine printf() Anweisung beinhaltet macht sie zwar keine Berechnung aber gibt was aus
+                                   oder wenn die Funktion eine globale Variable manipuliert|
+
+-> Funktionen, die keinen Rückgabewert (void) haben, können nur als Ausdrucksanweisung angeschrieben werden
+-> also wenn eine Funktion nichts zurückgibt kann diese z.B. nicht in einer Addition verwendet werden
++ main-Funktion
+-> ist Einstiegspunkt für das Betriebssystem
+-> der Rückgabewert der main-Funktion wird an das Betriebssystem zurückgegeben
+-> bei der main-Funktion ist die Beendigung mit exit() gleichwertig mit einer return-Anweisung innerhalb der main-Funktion
+-> Makros EXIT_SUCCESS bzw. EXIT_FAILURE aus stdlib.h geben für das jeweilige System den erforderlichen int-Wert für erfolgreiche bzw. nicht erfolgreiche Beendigung zurück
+-> es ist nicht für jedes C Programm zwingend erforderlich, dass der Einstiegspunkt die main-Funktion ist
+   nur in hosted-Umgebungen ist die main-Funktion meistens der Einstiegspunkt
+   |hosted heißt, dass das Programm von einem Betriebssystem ausgeführt wird|
+   bei embedded systemen kann es sein dass eine Funktion nicht unter Kontrolle eines Betriebssystems steht
+   man nennt das eine free-standing-Umgebung - dann kann die main Funktion einen "custom-Kopf" haben - und nicht zwangsläufig int main(void)
+   wir werden aber immer von unserem Betriebssystem gehosted.
+
+
+- Beispiel (Aufrufe und implizite Typkonvertierung) 
+
++ bei Funktionen erfolgt an 2 Stellen eine implizite Konvertierung:
+-> bei der Übergabe: wenn die Argumente den Parametern zugewiesen werden - also wenn eine Funktion aufgerufen wird
+-> und wenn die Funktion beendet wird und etwas von der Funktion zurückgegeben wird an die Aufrufstelle - gibt es auch wieder eine implizite Typkonvertierung
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int max(int a, int b) 
+{
+	if (a > b)
+		return a;
+	else
+		return b;
+}
+
+int main(void) 
+{
+	int s;
+	float x;
+	s = max(1, 2);
+	printf("%d\n", s);
+	s = max(6 + 2 * 3, s * 7 + 3);
+	printf("%d\n", s);
+	x = max(1.8, 2.9); // Ausgabe ist 2.0, weil beide implizite casts zum tragen kommen: 1. die Argumente sind floats, es werden aber integers erwartet, weil der Typ der Parameter int ist => es wird also 1 und 2 verglichen
+	printf("%f\n", x); // und 2. der Rückgabewert wird in der main einer float Variable zugewiesen also wieder "hochgecasted" auf 2.0
+	printf("%d\n", max(10, max(5, 11))); // Verschachtelung von Aufrufen - Funktionsaufruf kann als Argument verwendet werden für einen weiteren Funktionsaufruf
+	max(3, 4); // möglich aber nicht sinnvoll, da Ergebnis nicht verwendet wird
+	printf("%d\n", printf(" ")); // es wird der return-value von printf() ausgegeben (Anzahl der Zeichen, 2)
+	return EXIT_SUCCESS;
+}
+(Ausgabe)
+2
+17
+2.000000
+11
+  2
+
+- Beispiel (wo liegt der Fehler?)
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) 
+{
+	float fval = square(2.5);
+	printf("%.2f\n", fval);
+	return EXIT_SUCCESS;
+}
+
+float square(float a) 
+{
+	return a*a;
+}
+
++ alle Funktionen, die in der main verwendet werden, müssen oberhalb der main entweder ganz verfasst werden oder es muss auf sie verwiesen werden
++ auf eine Funktion die unter der main verfasst wurde kann man über der main folgendermaßen verweisen:
++ bevor die main aufgerufen wird, müssen alle Schnittstellen zu den im Programm verwendeten Funktionen bekannt sein
+
+#include <stdio.h>
+#include <stdlib.h>
+
+float square(float); // Funktionsprototyp
+
+int main(void) 
+{
+	float fval = square(2.5);
+	printf("%.2f\n", fval);
+	return EXIT_SUCCESS;
+}
+
+float square(float a) 
+{
+	return a*a;
+}
+
+
+- Deklaration von Funktionen
+
++ Der Compiler überprüft immer die Konsitenz zwischen Funktionskopf und Funktionsaufruf
+-> daher muss beim Aufruf der Funktion die Schnittstelle der Funktion (der Funktionskopf) bekannt sein.
++ steht eine Funktion im Programmcode erst nach ihrem Aufruf, so muss eine Vorwaärtsdeklaration der Funktion erfolgen
+-> manchmal möchte man die main-Funktion am Anfang der Datei haben
+-> die restlichen Funktionen folgen danach.
++ Vorwärtsdeklaration
+-> damit wird dem Compiler der Typ des Rückgabewertes, der Name der Funktion und die Typen der Parameter bekannt gemacht
+-> diese Deklaration wird als Funktionsprototyp bezeichnet 
+   - die Namen der formalen Parameter können auch weggelassen werden, die Parametertypen müssen aber exakt übereinstimmen - auch in der Reihenfolge
+
+- Beispiel (Vorwährtsdeklaration)
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int max(int a, int b); // 3 Funktionsprototypen werden deklariert. die Parameternamen (a und b) können weggelassen werden
+int min(int a, int b);
+int sign(int a); // sign = Vorzeichen
+
+int main(void)
+{
+	int a = 10, b = 20, c = 0, d = -10;
+	printf("%d\n", max(a, b));
+	printf("%d\n", min(a, b));
+	printf("%d\n", sign(a));
+	printf("%d\n", sign(c));
+	printf("%d\n", sign(d));
+	return EXIT_SUCCESS;
+}
+
+int max(int a, int b)
+{
+	return a > b ? a : b; // wenn a größer b, dann wird a zurückgegeben, sonst b
+}
+
+int min(int a, int b)
+{
+	return a < b ? a : b;
+}
+
+int sign(int a) 
+{
+	return a > 0 ? 1 : a < 0 ? -1 : 0; // Verschachtelung des Operators 
+}
+(Ausgabe)
+20
+10
+1
+0
+-1
+
+- Behandlung von Bibliotheksfunktionen 
+
++ Regeln für die Vorwärtsdeklaration gelten auch für Bibliotheksfunktionen 
++ will man Bibliotheksfunktionen verwenden, so müssen ihr Prototypen bekannt sein
+  diese befinden sich (neben Makros und Konstanten) in den Header-Dateien
++ durch das Einbinden der Header-Dateien, werden die Funktionsprototypen der Bibliotheksfunktionen eingefügt
++ zum Beispiel erzeugt #include <stdio.h> folgendes:
+-> der Präprozessor ersetzt an dieser Stelle die Direktive durch den Code in stdio.h
+-> in dieser Datei stehen unter anderem die Prototypen von Funktionen (z.B. printf)
+-> dadurch kennt der Compiler die Prototypen während der Übersetzung der nachfolgenden Zeilen des eigentlichen Codes
+
+
+- Gültigkeitsbereiche von Namen
+
++ der Compiler übersetzt C Programme dateiweise
++ in einer Datei gibt es vier Gültigkeitsbereiche 
+-> gesamte Datei
+-> Funktion
+-> Block (Variablen sind nur innerhalb einer z.B. for-Kontrollflussanweisung gültig)
+-> Funktionsprototyp
++ innerhalb einer Datei gelten folgende Regeln:
+-> Namen, die in Blöcken eingeführt werden, verlieren am Blockende ihre Bedeutung
+-> Namen der formalen Parameter von FUnktionen gelten nur innerhalb der entsprechenden Funktion
+-> Namen externer Variablen sind ab ihrer Deklaration bis zum Ende der Datei gültig
+
+- Globale Variablen
+
++ können in allen Funktionen einer Datei verwendet werden
++ gibt es eine lokale Variable mit gleichem Bezeichner, dann wird die lokale Variable verwendet
++ grundlegende Regel: Variablen möglichst lokal definieren
++ globale Variablen werden automatisch initialisiert
+
+Datentyp                  Initialisierung
+
+short, int, long          0
+char                      '\0' 
+float, double             0.0
+Zeiger                    NULL
+
+- Beispiel (Gültigkeitsbereich)
+
+#include <stdio.h>
+#include <stdlib.h>
+
+float b; // Globale Variable, überall sichtbar, automatisch initialisiert!
+
+void test1(int a, double b) 
+{
+	int c = 10;
+	printf("In test1: a=%d, b=%f, c=%d, a*c=%d\n", a, b, c, a * c);
+	a = 80;
+	b = 30.0;
+	printf("In test1: a=%d, b=%f, c=%d, a*c=%d\n", a, b, c, a * c);
+}
+
+int main(void) 
+{
+	int a = 10;
+	int c = 50;
+	test1(a, b);
+	printf("In main: a=%d, b=%f, c=%d, a*c=%d\n", a, b, c, a * c);
+	while (a > 0) 
+	{
+		int c = 200;
+		printf("In main: a=%d, b=%f, c=%d, a*c=%d\n", a, b, c, a * c);
+		a--;
+	}
+	printf("In main: a=%d, b=%f, c=%d, a*c=%d\n", a, b, c, a * c);
+	return EXIT_SUCCESS;
+}
+(Ausgabe)
+In test1: a=10, b=0.000000, c=10, a*c=100
+In test1: a=80, b=30.000000, c=10, a*c=800
+In main: a=10, b=0.000000, c=50, a*c=500
+In main: a=10, b=0.000000, c=200, a*c=2000
+In main: a=9, b=0.000000, c=200, a*c=1800
+In main: a=8, b=0.000000, c=200, a*c=1600
+In main: a=7, b=0.000000, c=200, a*c=1400
+In main: a=6, b=0.000000, c=200, a*c=1200
+In main: a=5, b=0.000000, c=200, a*c=1000
+In main: a=4, b=0.000000, c=200, a*c=800
+In main: a=3, b=0.000000, c=200, a*c=600
+In main: a=2, b=0.000000, c=200, a*c=400
+In main: a=1, b=0.000000, c=200, a*c=200
+In main: a=0, b=0.000000, c=50, a*c=0
+
+
+- Rekursion
+
++ Rekursion liegt dann vor, wenn eine Funktion, ein Algorithmus, eine Datenstruktur, ein Begriff, etc. durch sich selbst definiert wird
++ auf Funktionen bezogen
+-> eine Funktion heißt rekursiv, wenn sie Abschnitte enthält, die wiederum die Funktion direkt oder indirekt aufrufen
+-> eine Funktion heißt iterativ, wenn bestimmte Abschnitte der Funktion innerhalb einer einzigen Ausführung der Funktion mehrfach durchlaufen werden
++ Probleme können rekursiv sehr elegant beschrieben werden und Algorithmen/Funktionen werdne kompakter
+
++ Beispiel: eine Funktion die aufaddiert
+
+-> iterativ
+
+Sum(n) = 1 + ... + n // Summe von n Zahlen // ... heißt Durchlaufen einer for-Schleife
+
+-> rekursiv
+
+Sum(n) = n + Sum(n-1) // ich definier die Summenfunktion durch sich selbst / muss terminieren hier wenn Sum(n) = 0
+
++ Beispiel
+
+#include <stdio.h>
+#include <stdlib.h>
+
+unsigned int sum_iterative(unsigned int num) 
+{
+	int sum = 0;
+	for (int i = 1; i <= num; i++)
+		sum += i;
+	return sum;
+}
+
+unsigned int sum_recursive(unsigned int num) 
+{
+	if (num > 0)
+		return num + sum_recursive(num - 1);
+	else
+		return 0;
+}
+
+int main(void)
+{
+	printf("%u\n", sum_iterative(10));
+	printf("%u\n", sum_recursive(10));
+	printf("%u\n", sum_iterative(100));
+	printf("%u\n", sum_recursive(100));
+	return EXIT_SUCCESS;
+}
+(Ausgabe)
+55
+55
+5050
+5050
+
+-> Funktionsaufrufe werden in einem eigenen Speicherbereich abgelegt: Stack
+   - Beispiel: Summe von 0 bis 2
+     
+01:26:00
